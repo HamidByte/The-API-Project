@@ -20,6 +20,16 @@ Before you begin, ensure you have met the following requirements:
 
 1. Install dependencies: `npm install`
 2. Set up the database configuration in `config/config.json`.
+   Open `config/config.json` and update the following fields with your MySQL database information:
+   ```json
+   "development": {
+     "username": "your_username",
+     "password": "your_password",
+     "database": "your_database_name",
+     "host": "your_database_host",
+     "dialect": "mysql"
+   },
+   ```
 3. Run migrations: `npx sequelize db:migrate`
 4. Seed the database: `npx sequelize db:seed:all`
 5. Start the server: `npm start`
@@ -39,8 +49,8 @@ Before you begin, ensure you have met the following requirements:
     ```
 3. Set up the MySQL database:
 
-    Create a MySQL database and update the connection details in models/index.js.
-
+    Create a MySQL database and update the connection details in config/config.json.
+    
 4. Run the migrations to create tables:
 
     ```bash
