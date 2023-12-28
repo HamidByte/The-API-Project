@@ -89,13 +89,13 @@ Before you begin, ensure you have met the following requirements:
 ### Get Quotes by Category
 - **Endpoint:** `/api/quotes/category/:category`
 - **Method:** `GET`
-- **Description:** Returns a list of quotes belonging to the specified category.
+- **Description:** Returns a randomly selected quote from the list of quotes belonging to the specified category.
 - **Example:** `http://localhost:3000/api/quotes/category/inspiration`
 
 ### Get Quotes by Author
 - **Endpoint:** `/api/quotes/author/:author`
 - **Method:** `GET`
-- **Description:** Returns a list of quotes written by the specified author.
+- **Description:** Returns a randomly selected quote from the list of quotes written by the specified author.
 - **Example:** `http://localhost:3000/api/quotes/author/John Green`
 
 ## Acknowledgments
