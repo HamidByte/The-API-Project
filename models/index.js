@@ -1,10 +1,6 @@
 const { Sequelize } = require('sequelize');
 const QuoteModel = require('./Quote');
-
-const sequelize = new Sequelize('quotations_hub', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = require('../config/database'); // Import the database configuration
 
 const models = {
   Quote: QuoteModel(sequelize, Sequelize),

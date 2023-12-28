@@ -28,7 +28,7 @@ router.get('/random', async (req, res) => {
   //   // Fetch the quote with the random ID
   //   const quote = await models.Quote.findByPk(randomId);
 
-    // Better way to do that
+    // Alternative method for random
     const quote = await models.Quote.findOne({
       order: sequelize.literal('RAND()'), // Order by a random row for MySQL
     });
