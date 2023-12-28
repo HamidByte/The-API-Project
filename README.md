@@ -86,6 +86,18 @@ Before you begin, ensure you have met the following requirements:
 - **Description:** Performs a case-insensitive search for a random quote based on the provided query string in the quote and category fields.
 - **Example:** `http://localhost:3000/api/quotes/search?q=inspiration`
 
+### Get Quotes by Category
+- **Endpoint:** `/api/quotes/category/:category`
+- **Method:** `GET`
+- **Description:** Returns a list of quotes belonging to the specified category.
+- **Example:** `http://localhost:3000/api/quotes/category/inspiration`
+
+### Get Quotes by Author
+- **Endpoint:** `/api/quotes/author/:author`
+- **Method:** `GET`
+- **Description:** Returns a list of quotes written by the specified author.
+- **Example:** `http://localhost:3000/api/quotes/author/John Green`
+
 ## Acknowledgments
 
 Thank you to the open-source community for providing valuable tools and libraries.
