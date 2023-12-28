@@ -34,13 +34,19 @@ router.get('/random', async (req, res) => {
     });
 
     if (!quote) {
-      return res.status(404).json({ message: 'No quotes found' });
+      return res.status(404).json({
+        found: false,
+        message: 'No quotes found',
+      });
     }
 
-    res.json(quote);
+    res.json({
+      found: true,
+      quote,
+    });
   } catch (error) {
     console.error('Error fetching random quote:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ found: false, message: 'Internal Server Error' });
   }
 });
 
@@ -53,7 +59,6 @@ router.get('/search', async (req, res) => {
       where: {
         // Use Sequelize's "Op.like" operator for a case-insensitive search
         [Sequelize.Op.or]: [
-          
           { quote: { [Sequelize.Op.like]: `%${q}%` } }, // Search in the quote field
           { category: { [Sequelize.Op.like]: `%${q}%` } }, // Search in the category field
         ],
@@ -61,16 +66,16 @@ router.get('/search', async (req, res) => {
     });
 
     if (!quotes || quotes.length === 0) {
-      return res.status(404).json({ message: 'No quotes found for the given query' });
+      return res.status(404).json({ found: false, message: 'No quotes found for the given query' });
     }
 
     // Pick a random quote from the search results
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-    res.json(randomQuote);
+    res.json({ found: true, quote: randomQuote });
   } catch (error) {
     console.error('Error searching quotes:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ found: false, message: 'Internal Server Error' });
   }
 });
 
@@ -82,13 +87,57 @@ router.get('/:id', async (req, res) => {
     const quote = await models.Quote.findByPk(id);
 
     if (!quote) {
-      return res.status(404).json({ message: 'Quote not found' });
+      return res.status(404).json({ found: false, message: 'Quote not found' });
     }
 
-    res.json(quote);
+    res.json({ found: true, quote });
   } catch (error) {
     console.error('Error fetching quote by ID:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ found: false, message: 'Internal Server Error' });
+  }
+});
+
+// GET /api/quotes/category/:category
+router.get('/category/:category', async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const quotes = await models.Quote.findAll({
+      where: {
+        category: { [Sequelize.Op.like]: `%${category}%` },
+      },
+    });
+
+    if (!quotes || quotes.length === 0) {
+      return res.status(404).json({ found: false, message: 'No quotes found for the given category' });
+    }
+
+    res.json({ found: true, quotes });
+  } catch (error) {
+    console.error('Error fetching quotes by category:', error);
+    res.status(500).json({ found: false, message: 'Internal Server Error' });
+  }
+});
+
+// GET /api/quotes/author/:author
+router.get('/author/:author', async (req, res) => {
+  const { author } = req.params;
+
+  try {
+    const quotes = await models.Quote.findAll({
+      where: {
+        author: { [Sequelize.Op.like]: `%${author}%` },
+      },
+    });
+
+    if (!quotes || quotes.length === 0) {
+      return res.status(404).json({ found: false, message: 'No quotes found for the given author' });
+    }
+
+    res.json({ found: true, quotes });
+  } catch (error) {
+    console.error('Error fetching quotes by author:', error);
+    res.status(500).json({ found: false, message: 'Internal Server Error' });
   }
 });
 
