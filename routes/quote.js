@@ -112,7 +112,10 @@ router.get('/category/:category', async (req, res) => {
       return res.status(404).json({ found: false, message: 'No quotes found for the given category' });
     }
 
-    res.json({ found: true, quotes });
+    // Pick a random quote from the list
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    res.json({ found: true, quote: randomQuote });
   } catch (error) {
     console.error('Error fetching quotes by category:', error);
     res.status(500).json({ found: false, message: 'Internal Server Error' });
@@ -134,7 +137,10 @@ router.get('/author/:author', async (req, res) => {
       return res.status(404).json({ found: false, message: 'No quotes found for the given author' });
     }
 
-    res.json({ found: true, quotes });
+    // Pick a random quote from the list
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    res.json({ found: true, quote: randomQuote });
   } catch (error) {
     console.error('Error fetching quotes by author:', error);
     res.status(500).json({ found: false, message: 'Internal Server Error' });
