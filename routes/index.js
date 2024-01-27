@@ -1,9 +1,11 @@
-const express = require('express');
-const quoteRoutes = require('./quote');
+const express = require('express')
+const authRoutes = require('./auth')
+const quoteRoutes = require('./quote')
 
-const router = express.Router();
+const router = express.Router()
 
 // Define quote routes
-router.use('/quotes', quoteRoutes);
+router.use('/auth', authRoutes)
+router.use('/quote', quoteRoutes)
 
-module.exports = router;
+module.exports = router

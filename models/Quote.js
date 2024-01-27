@@ -1,15 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
   const Quote = sequelize.define('Quote', {
     quote: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     author: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     category: {
-      type: DataTypes.STRING,
-    },
-  });
+      type: DataTypes.STRING
+    }
+  })
 
-  return Quote;
-};
+  return Quote
+}
