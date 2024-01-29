@@ -1,4 +1,5 @@
 const { models, Sequelize, sequelize } = require('../models')
+const { getRandomOrder } = require('../config/utils/databaseUtils')
 
 const getRandomQuote = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ const getRandomQuote = async (req, res) => {
 
     // Alternative method for random
     const quote = await models.Quote.findOne({
-      order: sequelize.literal('RAND()') // Order by a random row for MySQL
+      order: getRandomOrder(sequelize.getDialect())
     })
 
     if (!quote) {
