@@ -1,7 +1,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert(
-      'Tokens',
+      'ApiKeys',
       [
         {
           uuid: 'a53c0f39-d8c0-4e3d-969e-6ab5cc547f41',
@@ -18,6 +18,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Tokens', null, {})
+    await queryInterface.bulkDelete('ApiKeys', null, {})
   }
 }

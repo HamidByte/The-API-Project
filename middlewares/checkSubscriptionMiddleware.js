@@ -4,12 +4,11 @@ const updateRequestCount = require('../utils/updateRequestCount')
 
 const checkSubscription = async (req, res, next) => {
   try {
-    // Dummy information for illustration, replace with your actual authentication logic
-    // const { user } = req.body // const userId = req.userId // Assuming user data is available after authentication
-    const { userId } = req.body // const userId = req.body.userId
+    // const { userId } = req.body // const userId = req.body.userId
+    const userId = req.userId
 
     if (!userId) {
-      return res.status(400).json({ error: 'User ID is required in the request body.' })
+      return res.status(400).json({ error: 'User id not found.' })
     }
 
     // Fetch the user from the model
@@ -26,7 +25,7 @@ const checkSubscription = async (req, res, next) => {
     const monthlyLimit = subscriptionConfig.monthlyLimits[user.subscriptionStatus]
 
     if (user.requestCount >= monthlyLimit) {
-      return res.status(403).json({ error: `Monthly request limit reached. ${subscriptionConfig.subscriptionTypes.free} users cannot request more than ${subscriptionConfig.monthlyLimits[user.subscriptionStatus]} api requests per month.` })
+      return res.status(403).json({ message: `Monthly request limit reached. ${subscriptionConfig.subscriptionTypes.free} users cannot request more than ${subscriptionConfig.monthlyLimits[user.subscriptionStatus]} api requests per month.` })
     }
 
     // Increment requestCount for all users, including premium users
@@ -36,8 +35,14 @@ const checkSubscription = async (req, res, next) => {
 
     next()
   } catch (error) {
-    console.error('Error checking subscription:', error)
-    return res.status(500).json({ error: 'Internal server error' })
+    const errorMessage = `Error during checking subscription: ${error.message}`
+
+    if (process.env.NODE_ENV === 'development') {
+      console.error(errorMessage, error)
+      return res.status(500).json({ error: 'Internal Server Error' })
+    } else {
+      return res.status(500).json({ error: 'Internal Server Error' })
+    }
   }
 }
 

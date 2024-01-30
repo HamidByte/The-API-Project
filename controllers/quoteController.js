@@ -1,18 +1,19 @@
 const { models, Sequelize, sequelize } = require('../models')
 const { getRandomOrder } = require('../config/utils/databaseUtils')
 
+const handleServerError = (res, error, operation) => {
+  const errorMessage = `${operation}: ${error.message}`
+
+  if (process.env.NODE_ENV === 'development') {
+    console.error(errorMessage, error)
+    res.status(500).json({ error: 'Internal Server Error', message: errorMessage })
+  } else {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 const getRandomQuote = async (req, res) => {
   try {
-    // // Get the count of quotes in the database
-    //   const count = await models.Quote.count();
-
-    //   // Generate a random ID within the range of existing IDs
-    //   const randomId = Math.floor(Math.random() * count) + 1;
-
-    //   // Fetch the quote with the random ID
-    //   const quote = await models.Quote.findByPk(randomId);
-
-    // Alternative method for random
     const quote = await models.Quote.findOne({
       order: getRandomOrder(sequelize.getDialect())
     })
@@ -29,8 +30,7 @@ const getRandomQuote = async (req, res) => {
       quote
     })
   } catch (error) {
-    console.error('Error fetching random quote:', error)
-    res.status(500).json({ found: false, message: 'Internal Server Error' })
+    handleServerError(res, error, 'Error during fetching random quote')
   }
 }
 
@@ -57,8 +57,7 @@ const searchQuote = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    console.error('Error searching quotes:', error)
-    res.status(500).json({ found: false, message: 'Internal Server Error' })
+    handleServerError(res, error, 'Error during searching quotes')
   }
 }
 
@@ -74,8 +73,7 @@ const getQuoteById = async (req, res) => {
 
     res.json({ found: true, quote })
   } catch (error) {
-    console.error('Error fetching quote by ID:', error)
-    res.status(500).json({ found: false, message: 'Internal Server Error' })
+    handleServerError(res, error, 'Error during fetching quotes by id')
   }
 }
 
@@ -98,8 +96,7 @@ const getQuoteByCategory = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    console.error('Error fetching quotes by category:', error)
-    res.status(500).json({ found: false, message: 'Internal Server Error' })
+    handleServerError(res, error, 'Error during fetching quotes by category')
   }
 }
 
@@ -122,8 +119,7 @@ const getQuoteByAuthor = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    console.error('Error fetching quotes by author:', error)
-    res.status(500).json({ found: false, message: 'Internal Server Error' })
+    handleServerError(res, error, 'Error during fetching quotes by author')
   }
 }
 
@@ -132,8 +128,7 @@ const getQuoteByAuthor = async (req, res) => {
 //     const quotes = await models.Quote.findAll()
 //     res.json(quotes)
 //   } catch (error) {
-//     console.error('Error fetching all quotes:', error)
-//     res.status(500).json({ found: false, message: 'Internal Server Error' })
+//     handleServerError(res, error, 'Error during fetching all quotes')
 //   }
 // }
 
@@ -143,8 +138,7 @@ const getQuoteByAuthor = async (req, res) => {
 //     const newQuote = await models.Quote.create({ quote, author, category })
 //     res.json(newQuote)
 //   } catch (error) {
-//     console.error('Error inserting new quote:', error)
-//     res.status(500).json({ found: false, message: 'Internal Server Error' })
+//     handleServerError(res, error, 'Error during inserting new quote')
 //   }
 // }
 

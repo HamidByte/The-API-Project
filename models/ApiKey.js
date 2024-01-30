@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require('uuid')
 
 module.exports = (sequelize, DataTypes) => {
-  const Token = sequelize.define(
-    'Token',
+  const ApiKey = sequelize.define(
+    'ApiKey',
     {
       uuid: {
         type: DataTypes.UUID,
@@ -22,7 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        unique: true
+        unique: true,
+        references: {
+          model: 'Users',
+          key: 'uuid'
+        }
       }
     },
     {
@@ -31,9 +35,16 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   // Generate a UUID before creating a new record
-  Token.beforeCreate(token => {
+  ApiKey.beforeCreate(token => {
     token.uuid = uuidv4()
   })
 
-  return Token
+  ApiKey.associate = models => {
+    ApiKey.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    })
+  }
+
+  return ApiKey
 }

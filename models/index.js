@@ -1,11 +1,11 @@
 const { Sequelize } = require('sequelize')
 const sequelize = require('../config/database') // Import the database configuration
-const TokenModel = require('./Token')
+const ApiKeyModel = require('./ApiKey')
 const QuoteModel = require('./Quote')
 const UserModel = require('./User')
 
 const models = {
-  Token: TokenModel(sequelize, Sequelize),
+  ApiKey: ApiKeyModel(sequelize, Sequelize),
   Quote: QuoteModel(sequelize, Sequelize),
   User: UserModel(sequelize, Sequelize)
 }

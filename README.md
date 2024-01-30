@@ -66,6 +66,8 @@ If you're a developer making modifications to the project, refer to the 'Databas
 
 5. Start the server:
 
+   For development:
+
    ```bash
    npm start
    ```
@@ -76,60 +78,80 @@ If you're a developer making modifications to the project, refer to the 'Databas
    npm run dev
    ```
 
+   For production:
+
+   ```bash
+   npm run prod
+   ```
+
    The server will be running at http://localhost:3000.
 
 ## Authentication Endpoints
 
-### Generate Token
+### Generate API Key
 
-- **Endpoint:** `/api/v1/auth/token`
+- **Endpoint:** `/generate`
 - **Method:** `POST`
-- **Description:** Generates a new authentication token for a user.
+- **Description:** Generates a new API key for a user.
 
 **Request**
 
 ```bash
-curl -X POST -d "userId=<user-id>" http://localhost:3000/api/v1/auth/token
+curl -X POST -d "userId=<user-id>" http://localhost:3000/generate
 ```
 
 **Response**
 
 ```json
 {
-  "token": "<generated-token>"
+  "apiKey": {
+    "uuid": "generated-uuid",
+    "token": "generated-token",
+    "tokenExpiration": "24h",
+    "userId": "user-id",
+    "createdAt": "timestamp",
+    "updatedAt": "timestamp"
+  }
 }
 ```
 
-### Regenerate Token
+### Get API Key
 
-- **Endpoint:** `/api/v1/auth/token`
+- **Endpoint:** `/get-api`
 - **Method:** `PUT`
-- **Description:** Regenerates the existing authentication token for a user.
+- **Description:** Fetch the existing API key for a user.
 
 **Request**
 
 ```bash
-curl -X PUT -d "userId=<user-id>" http://localhost:3000/api/v1/auth/token
+curl -X PUT -d "userId=<user-id>" http://localhost:3000/get-api
 ```
 
 **Response**
 
 ```json
 {
-  "token": "<regenerated-token>"
+  "apiKey": {
+    "uuid": "generated-uuid",
+    "token": "generated-token",
+    "tokenExpiration": "24h",
+    "userId": "user-id",
+    "createdAt": "timestamp",
+    "updatedAt": "timestamp"
+  }
 }
 ```
 
-### Delete Token
+### Delete API Key
 
-- **Endpoint:** `/api/v1/auth/token`
+- **Endpoint:** `/revoke`
 - **Method:** `DELETE`
-- **Description:** Deletes the existing authentication token for a user.
+- **Description:** Deletes the existing API key for a user.
 
 **Request**
 
 ```bash
-curl -X DELETE -d "userId=<user-id>" http://localhost:3000/api/v1/auth/token
+curl -X DELETE -d "userId=<user-id>" http://localhost:3000/revoke
 ```
 
 **Response**
@@ -138,29 +160,7 @@ curl -X DELETE -d "userId=<user-id>" http://localhost:3000/api/v1/auth/token
 HTTP/1.1 204 No Content
 ```
 
-### Check Token Existence
-
-- **Endpoint:** `/api/v1/auth/token/exists`
-- **Method:** `GET`
-- **Description:** Checks if a token exists for a given user.
-
-**Request**
-
-```bash
-curl http://localhost:3000/api/v1/auth/token/exists?userId=<user-id>
-```
-
-**Response**
-
-```json
-{
-  "exists": true
-}
-```
-
 ## API Endpoints
-
-**Important Note:** All requests to the following endpoints require the `userId` parameter in the request body. Ensure to include it for successful authentication and interaction with the API.
 
 ### Get Random Quote
 
@@ -173,7 +173,7 @@ curl http://localhost:3000/api/v1/auth/token/exists?userId=<user-id>
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<user-id>"}' http://localhost:3000/api/v1/quote/random
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/quote/random
 ```
 
 **Response**
@@ -203,7 +203,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<u
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<user-id>"}' http://localhost:3000/api/v1/quote/498765
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/quote/498765
 ```
 
 **Response**
@@ -233,7 +233,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<u
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<user-id>"}' http://localhost:3000/api/v1/quote/search?q=lorem
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/quote/search?q=lorem
 ```
 
 **Response**
@@ -263,7 +263,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<u
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<user-id>"}' http://localhost:3000/api/v1/quote/category/inspiration
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/quote/category/inspiration
 ```
 
 **Response**
@@ -293,7 +293,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<u
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" -d '{"userId": "<user-id>"}' http://localhost:3000/api/v1/quote/author/John Doe
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/quote/author/John Doe
 ```
 
 **Response**
@@ -376,13 +376,13 @@ npx sequelize model:generate --name User --attributes uuid:UUID:primaryKey,first
 
 Review the generated migration file to ensure data types and constraints match your model.
 
-2. Token Model Migration:
+2. ApiKey Model Migration:
 
 ```bash
-npx sequelize model:generate --name Token --attributes uuid:UUID:primaryKey,token:string,tokenExpiration:string,userId:UUID:unique
+npx sequelize model:generate --name ApiKey --attributes uuid:UUID:primaryKey,token:string,tokenExpiration:string,userId:UUID:unique
 ```
 
-Review the generated migration file to ensure it matches your Token model.
+Review the generated migration file to ensure it matches your ApiKey model.
 
 3. Quote Model Migration:
 
@@ -438,7 +438,7 @@ Be cautious with seeders, especially in production environments, as they can mod
 
 ### Creating Seeders
 
-Below are examples of seeders for your models (`User`, `Token`, and `Quote`) with some dummy data. Create separate seeders for each model and save these scripts in the `seeders` directory.
+Below are examples of seeders for your models (`User`, `ApiKey`, and `Quote`) with some dummy data. Create separate seeders for each model and save these scripts in the `seeders` directory.
 
 1. User Seeder (`seeders/20220129120000-demo-user.js`):
 
@@ -473,13 +473,13 @@ module.exports = {
 }
 ```
 
-2. Token Seeder (`seeders/20220129120100-demo-token.js`):
+2. ApiKey Seeder (`seeders/20220129120100-demo-token.js`):
 
 ```js
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert(
-      'Tokens',
+      'ApiKey',
       [
         {
           uuid: 'a53c0f39-d8c0-4e3d-969e-6ab5cc547f41',
@@ -496,7 +496,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Tokens', null, {})
+    await queryInterface.bulkDelete('ApiKeys', null, {})
   }
 }
 ```
@@ -555,7 +555,7 @@ const models = [
     attributes: 'uuid:UUID:primaryKey,firstName:string,lastName:string,username:string,email:string:unique,password:string,subscriptionStatus:enum,requestCount:integer,lastRequestDate:date'
   },
   {
-    name: 'Token',
+    name: 'ApiKey',
     attributes: 'uuid:UUID:primaryKey,token:string,tokenExpiration:string,userId:UUID:unique'
   },
   {
