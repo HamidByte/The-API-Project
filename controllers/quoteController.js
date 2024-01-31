@@ -21,7 +21,7 @@ const getRandomQuote = async (req, res) => {
     if (!quote) {
       return res.status(404).json({
         found: false,
-        message: 'No quotes found'
+        message: 'No quote found'
       })
     }
 
@@ -49,7 +49,7 @@ const searchQuote = async (req, res) => {
     })
 
     if (!quotes || quotes.length === 0) {
-      return res.status(404).json({ found: false, message: 'No quotes found for the given query' })
+      return res.status(404).json({ found: false, message: 'No quote found for the given query' })
     }
 
     // Pick a random quote from the search results
@@ -57,7 +57,7 @@ const searchQuote = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    handleServerError(res, error, 'Error during searching quotes')
+    handleServerError(res, error, 'Error during searching quote')
   }
 }
 
@@ -73,7 +73,7 @@ const getQuoteById = async (req, res) => {
 
     res.json({ found: true, quote })
   } catch (error) {
-    handleServerError(res, error, 'Error during fetching quotes by id')
+    handleServerError(res, error, 'Error during fetching quote by id')
   }
 }
 
@@ -88,7 +88,7 @@ const getQuoteByCategory = async (req, res) => {
     })
 
     if (!quotes || quotes.length === 0) {
-      return res.status(404).json({ found: false, message: 'No quotes found for the given category' })
+      return res.status(404).json({ found: false, message: 'No quote found for the given category' })
     }
 
     // Pick a random quote from the list
@@ -96,7 +96,7 @@ const getQuoteByCategory = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    handleServerError(res, error, 'Error during fetching quotes by category')
+    handleServerError(res, error, 'Error during fetching quote by category')
   }
 }
 
@@ -111,7 +111,7 @@ const getQuoteByAuthor = async (req, res) => {
     })
 
     if (!quotes || quotes.length === 0) {
-      return res.status(404).json({ found: false, message: 'No quotes found for the given author' })
+      return res.status(404).json({ found: false, message: 'No quote found for the given author' })
     }
 
     // Pick a random quote from the list
@@ -119,7 +119,7 @@ const getQuoteByAuthor = async (req, res) => {
 
     res.json({ found: true, quote: randomQuote })
   } catch (error) {
-    handleServerError(res, error, 'Error during fetching quotes by author')
+    handleServerError(res, error, 'Error during fetching quote by author')
   }
 }
 

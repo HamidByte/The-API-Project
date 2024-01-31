@@ -1,6 +1,10 @@
-# Random Quote Generator API
+# The API Project, Node, Express, PostgreSQL, Sequelize, Session, JWT
 
-Random Quote Generator API provides APIs for accessing random quotes and performing searches based on various criteria. It uses Node.js, Express.js, Sequelize for MySQL database, and ESLint for code linting.
+TheAPIProject is a versatile and affordable API platform designed to provide developers with easy access to a diverse range of services. Initially conceived as a "Random Quote Generator API" the project is expanding its vision to encompass a rich collection of data services. Upcoming releases include GIFs, Dummy or Mock APIs for testing, Jokes, and more. With a focus on affordability and simplicity, TheAPIProject stands as the go-to solution for developers seeking dynamic content.
+
+## API Documentation
+
+Explore the API documentation on [Postman](https://www.postman.com/hamidbyte/workspace/the-api-project/overview).
 
 ## Prerequisites
 
@@ -13,8 +17,11 @@ Before you begin, ensure you have met the following requirements:
 ## Dependencies
 
 - Express.js
-- Sequelize ORM
 - PostgreSQL or MySQL database
+- Sequelize ORM for database
+- ESLint for code linting
+- Session-based Authentication for Users
+- JWT Authentication for API Keys
 
 ## Setting Up PostgreSQL or MySQL Server and Importing Database
 
@@ -27,13 +34,13 @@ If you're a developer making modifications to the project, refer to the 'Databas
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/mhamid49/random-quote-generator-api.git
+   git clone https://github.com/HamidByte/the-api-project.git
    ```
 
 2. Install dependencies:
 
    ```bash
-   cd random-quote-generator-api
+   cd the-api-project
    npm install
    ```
 
