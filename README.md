@@ -34,13 +34,13 @@ If you're a developer making modifications to the project, refer to the 'Databas
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/HamidByte/the-api-project.git
+   git clone https://github.com/HamidByte/The-API-Project.git
    ```
 
 2. Install dependencies:
 
    ```bash
-   cd the-api-project
+   cd The-API-Project
    npm install
    ```
 
@@ -49,7 +49,8 @@ If you're a developer making modifications to the project, refer to the 'Databas
    Create a .env file in the root of the project and set the following variables:
 
    ```env
-   SECRET_KEY=your-secret-key
+   SESSION_SECRET_KEY=your-secret-key
+   API_SECRET_KEY=your-secret-key
    ```
 
 4. Configure the Database Settings:

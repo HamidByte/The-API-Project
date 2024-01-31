@@ -35,7 +35,7 @@ app.use(
     store: new connectSessionSequelize({
       db: sequelize
     }),
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: true, // Saves sessions for all visitors
     cookie: {
