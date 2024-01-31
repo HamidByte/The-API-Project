@@ -88,6 +88,48 @@ If you're a developer making modifications to the project, refer to the 'Databas
 
 ## Authentication Endpoints
 
+### Register User
+
+- **Endpoint:** `/register`
+- **Method:** `POST`
+- **Description:** Create a new user account by providing valid registration details.
+
+**Request**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "securePassword"}' http://localhost:3000/register
+```
+
+**Response**
+
+```json
+{
+  "uuid": "generatedUUID",
+  "email": "user@example.com"
+}
+```
+
+### Login User
+
+- **Endpoint:** `/login`
+- **Method:** `POST`
+- **Description:** Authenticate an existing user by providing valid login credentials.
+
+**Request**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "securePassword"}' http://localhost:3000/register
+```
+
+**Response**
+
+```json
+{
+  "uuid": "generatedUUID",
+  "email": "user@example.com"
+}
+```
+
 ### Generate API Key
 
 - **Endpoint:** `/generate`
@@ -97,7 +139,7 @@ If you're a developer making modifications to the project, refer to the 'Databas
 **Request**
 
 ```bash
-curl -X POST -d "userId=<user-id>" http://localhost:3000/generate
+curl -X POST -H "Cookie: session=<your-session-cookie>" -d "tokenExpiration=24h" http://localhost:3000/generate
 ```
 
 **Response**
@@ -124,7 +166,7 @@ curl -X POST -d "userId=<user-id>" http://localhost:3000/generate
 **Request**
 
 ```bash
-curl -X PUT -d "userId=<user-id>" http://localhost:3000/get-api
+curl -X PUT -H "Cookie: session=<your-session-cookie>" http://localhost:3000/get-api
 ```
 
 **Response**
@@ -151,13 +193,15 @@ curl -X PUT -d "userId=<user-id>" http://localhost:3000/get-api
 **Request**
 
 ```bash
-curl -X DELETE -d "userId=<user-id>" http://localhost:3000/revoke
+curl -X DELETE -H "Cookie: session=<your-session-cookie>" http://localhost:3000/revoke
 ```
 
 **Response**
 
-```bash
-HTTP/1.1 204 No Content
+```json
+{
+  "message": "API Key has been successfully deleted"
+}
 ```
 
 ## API Endpoints

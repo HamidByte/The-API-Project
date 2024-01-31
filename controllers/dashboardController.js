@@ -37,7 +37,7 @@ const generateApiKey = async (tokenExpiration, userId) => {
 
     return newApiKey
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
+    return { error: 'Internal Server Error' }
   }
 }
 
@@ -50,10 +50,10 @@ const getApiKey = async userId => {
       return existingApiKey
     } else {
       // API key doesn't exist, display appropriate response
-      res.status(404).json({ message: 'API Key not found' })
+      return { error: 'API Key not found', status: 404 }
     }
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
+    return { error: 'Internal Server Error' }
   }
 }
 
@@ -65,12 +65,13 @@ const revokeApiKey = async userId => {
     if (existingApiKey) {
       // API key exists, proceed with deletion
       await models.ApiKey.destroy({ where: { userId } })
+      return { message: 'API Key has been successfully deleted' }
     } else {
       // API key doesn't exist, return appropriate response
-      res.status(404).json({ message: 'API Key not found' })
+      return { error: 'API Key not found', status: 404 }
     }
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
+    return { error: 'Internal Server Error' }
   }
 }
 

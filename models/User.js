@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const bcrypt = require('bcrypt')
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -22,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       password: {
         type: DataTypes.STRING,
@@ -46,10 +48,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
+  // User.associate = models => {
+  //   User.hasOne(models.ApiKey, {
+  //     foreignKey: 'userId'
+  //   })
+  // }
+
   // Generate a UUID before creating a new record
-  User.beforeCreate(user => {
+  User.beforeCreate(async user => {
     user.uuid = uuidv4()
+
+    // Hash the password before storing it in the database
+    user.password = await bcrypt.hash(user.password, 10) // 10 is the number of salt rounds
   })
+
+  // Method to check if the provided password matches the hashed password in the database
+  User.prototype.validPassword = async function (password) {
+    return bcrypt.compare(password, this.password)
+  }
 
   return User
 }

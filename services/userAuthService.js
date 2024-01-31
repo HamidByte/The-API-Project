@@ -1,13 +1,10 @@
-const bcrypt = require('bcrypt')
 const { models } = require('../models')
 
 exports.registerUser = async (email, password) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10)
-
     const newUser = await models.User.create({
       email,
-      password: hashedPassword
+      password
     })
 
     return newUser
@@ -24,14 +21,16 @@ exports.loginUser = async (email, password) => {
       }
     })
 
+    // User not found
     if (!user) {
-      return null // User not found
+      return null
     }
 
-    const isPasswordValid = bcrypt.compareSync(password, user.password)
+    const isPasswordValid = await user.validPassword(password)
 
+    // Invalid password
     if (!isPasswordValid) {
-      return null // Invalid password
+      return null
     }
 
     return user

@@ -22,11 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        unique: true,
-        references: {
-          model: 'Users',
-          key: 'uuid'
-        }
+        unique: true
       }
     },
     {
@@ -39,12 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     token.uuid = uuidv4()
   })
 
-  ApiKey.associate = models => {
-    ApiKey.belongsTo(models.User, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    })
-  }
+  // ApiKey.associate = models => {
+  //   ApiKey.belongsTo(models.User, {
+  //     foreignKey: 'userId',
+  //     onDelete: 'CASCADE'
+  //   })
+  // }
 
   return ApiKey
 }
