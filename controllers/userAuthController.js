@@ -78,7 +78,7 @@ exports.loginUser = async (req, res) => {
       // Update session
       await updateSession(req, user)
 
-      res.json({ uuid: user.uuid })
+      res.json({ uuid: user.uuid, firstName: user.firstName, lastName: user.lastName, username: user.username, email: user.email, subscriptionStatus: user.subscriptionStatus, requestCount: user.requestCount, lastRequestDate: user.lastRequestDate, createdAt: user.createdAt, updatedAt: user.updatedAt })
     } else {
       // Respond with appropriate error message
       res.status(401).json({ error: result.message })
@@ -210,7 +210,7 @@ exports.resetPassword = async (req, res) => {
     const user = await userAuthService.resetPassword(token)
 
     if (!user) {
-      return res.status(400).json({ error: 'Invalid or expired token' })
+      return res.status(400).json({ error: 'Invalid or expired token.' })
     }
 
     // Update the user's password and reset token

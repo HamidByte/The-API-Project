@@ -28,6 +28,40 @@ router.post('/update-profile', async (req, res) => {
   }
 })
 
+router.post('/update-email', async (req, res) => {
+  try {
+    const { email } = req.body
+
+    const result = await dashboardController.updateUserEmail(req.session.user.userId, {
+      email
+    })
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'A confirmation link has been sent to your email account.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+router.get('/confirm-email', async (req, res) => {
+  try {
+    const { token, email } = req.query
+
+    const result = await dashboardController.confirmEmailUpdate(token, email)
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'User email updated successfully.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
 router.post('/generate', async (req, res) => {
   // const userId = req.userId // const { userId } = req
   const { tokenExpiration } = req.body

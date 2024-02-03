@@ -141,7 +141,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 
 ```json
 {
-  "uuid": "generatedUUID"
+  "uuid": "6a7b8c9d-1234-5678-90ab-cdef12345678",
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe123",
+  "email": "john.doe@example.com",
+  "subscriptionStatus": "free",
+  "requestCount": 0,
+  "lastRequestDate": "2024-02-03T08:29:57.919Z",
+  "createdAt": "2024-02-03T08:29:58.052Z",
+  "updatedAt": "2024-02-03T08:30:11.702Z"
 }
 ```
 
@@ -249,6 +258,48 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"firstName": "John"
 ```json
 {
   "message": "Profile updated successfully."
+}
+```
+
+### Update User Email
+
+- **Endpoint:** `/update-email`
+- **Method:** `POST`
+- **Description:** Request to update the user's email address.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"email": "john.doe@example.com"}' http://localhost:3000/update-email
+```
+
+**Response:**
+
+```json
+{
+  "message": "A confirmation link has been sent to your email account."
+}
+```
+
+### Confirm Email Activation Link
+
+- **Endpoint:** `/confirm-email`
+- **Method:** `POST`
+- **Description:** Confirm the email activation link to update the user's email address.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X POST -H "Cookie: session=<your-session-cookie>" http://localhost:3000/confirm-email?token=01abca7e-e185-46f5-a420-85cc43191698&email=john.doe@example.com
+```
+
+**Response:**
+
+```json
+{
+  "message": "User email updated successfully."
 }
 ```
 

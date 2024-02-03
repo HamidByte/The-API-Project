@@ -1,8 +1,11 @@
 const { Sequelize, models } = require('../models')
+const { v4: uuidv4 } = require('uuid')
 const jwt = require('jsonwebtoken')
 const jwtOptions = require('../config/jwtOptions')
-const { validateUserPassword, validateName, validateUsername } = require('../utils/validation')
+const { sendConfirmEmailActivation } = require('../utils/emailNotification')
+const { validateUserEmail, validateUserPassword, validateName, validateUsername } = require('../utils/validation')
 const { hashPassword } = require('../utils/hashPassword')
+const userConfig = require('../config/userConfig')
 
 const updateUserProfile = async (userId, updatedData) => {
   try {
@@ -70,6 +73,65 @@ const updateUserProfile = async (userId, updatedData) => {
     }
 
     // Save changes to the database
+    await user.save()
+
+    return { status: 200 }
+  } catch (error) {
+    return { error: 'Internal Server Error' }
+  }
+}
+
+const updateUserEmail = async (userId, newEmail) => {
+  try {
+    const email = newEmail.email
+
+    // Validate user email
+    const isEmailValid = validateUserEmail(email)
+
+    if (isEmailValid.status === 'error') {
+      return { error: isEmailValid.message, status: 400 }
+    }
+
+    // Check if the new email already exists
+    const emailExists = await models.User.findOne({ where: { email } })
+
+    if (emailExists) {
+      return { error: 'Email already exists', status: 400 }
+    }
+
+    // Generate activation token
+    const activationToken = uuidv4()
+    const activationTokenExpiration = userConfig.activateTokenExpiration
+
+    // Save the activation token and send email change confirmation link
+    await models.User.update({ activateToken: activationToken, activateTokenExpiration: activationTokenExpiration }, { where: { uuid: userId } })
+
+    sendConfirmEmailActivation(email, activationToken)
+
+    return { status: 200 }
+  } catch (error) {
+    return { error: 'Internal Server Error' }
+  }
+}
+
+const confirmEmailUpdate = async (token, email) => {
+  try {
+    // Validate token and get user
+    const user = await models.User.findOne({
+      where: {
+        activateToken: token,
+        activateTokenExpiration: { [Sequelize.Op.gte]: new Date() }
+      }
+    })
+
+    if (!user) {
+      return { error: 'Invalid or expired token.', status: 400 }
+    }
+
+    // Update the user email and reset token
+    user.activateToken = null
+    user.activateTokenExpiration = null
+    user.email = email
     await user.save()
 
     return { status: 200 }
@@ -151,4 +213,4 @@ const revokeApiKey = async userId => {
   }
 }
 
-module.exports = { updateUserProfile, generateApiKey, getApiKey, revokeApiKey }
+module.exports = { updateUserProfile, updateUserEmail, confirmEmailUpdate, generateApiKey, getApiKey, revokeApiKey }

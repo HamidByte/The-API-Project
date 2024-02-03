@@ -19,5 +19,10 @@ module.exports = {
     from: process.env.EMAIL_ADDRESS,
     subject: 'Reset Your Password',
     text: resetLink => `Click on the following link to reset your password: ${resetLink}`
+  },
+  confirmEmail: {
+    from: process.env.EMAIL_ADDRESS,
+    subject: 'Confirm Your Email Change',
+    text: resetLink => `Click on the following link to confirm the email change: ${resetLink}`
   }
 }

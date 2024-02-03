@@ -46,4 +46,26 @@ const sendResetPasswordEmail = (email, token) => {
   })
 }
 
-module.exports = { sendActivationEmail, sendResetPasswordEmail }
+// Function to send activation email to confirm email change
+const sendConfirmEmailActivation = (email, token) => {
+  const transporter = nodemailer.createTransport(emailConfig)
+
+  const activationLink = `${baseURL}/confirm-email?token=${token}&email=${email}`
+
+  const mailOptions = {
+    from: emailConfig.confirmEmail.from,
+    to: email,
+    subject: emailConfig.confirmEmail.subject,
+    text: emailConfig.confirmEmail.text(activationLink)
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error)
+    } else {
+      // console.log('Email sent: ' + info.response)
+    }
+  })
+}
+
+module.exports = { sendActivationEmail, sendResetPasswordEmail, sendConfirmEmailActivation }
