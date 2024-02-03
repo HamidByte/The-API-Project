@@ -1,6 +1,82 @@
-const { models } = require('../models')
+const { Sequelize, models } = require('../models')
 const jwt = require('jsonwebtoken')
 const jwtOptions = require('../config/jwtOptions')
+const { validateUserPassword, validateName, validateUsername } = require('../utils/validation')
+const { hashPassword } = require('../utils/hashPassword')
+
+const updateUserProfile = async (userId, updatedData) => {
+  try {
+    // Fetch the user from the database
+    const user = await models.User.findByPk(userId)
+
+    // If the user is not found
+    if (!user) {
+      return { error: 'User not found', status: 404 }
+    }
+
+    // Update user data
+    if (updatedData.username) {
+      // Validate username
+      const isValidUsername = validateUsername(updatedData.username)
+
+      if (isValidUsername.status === 'error') {
+        return { error: isValidUsername.message, status: 400 }
+      }
+
+      // Check for uniqueness of the new username
+      const usernameExists = await models.User.findOne({
+        where: { username: updatedData.username, uuid: { [Sequelize.Op.ne]: userId } }
+      })
+
+      if (usernameExists) {
+        return { error: 'Username already in use', status: 400 }
+      }
+
+      user.username = updatedData.username
+    }
+
+    if (updatedData.firstName) {
+      // Validate user's name
+      const isValidFirstName = validateName(updatedData.firstName)
+
+      if (isValidFirstName.status === 'error') {
+        return { error: isValidFirstName.message, status: 400 }
+      }
+
+      user.firstName = updatedData.firstName
+    }
+
+    if (updatedData.lastName) {
+      // Validate user's name
+      const isValidLastName = validateName(updatedData.lastName)
+
+      if (isValidLastName.status === 'error') {
+        return { error: isValidLastName.message, status: 400 }
+      }
+
+      user.lastName = updatedData.lastName
+    }
+
+    if (updatedData.password) {
+      // Validate user password
+      const isValidPassword = validateUserPassword(updatedData.password)
+
+      if (isValidPassword.status === 'error') {
+        return { error: isValidPassword.message, status: 400 }
+      }
+
+      const hashedPassword = await hashPassword(updatedData.password)
+      user.password = hashedPassword
+    }
+
+    // Save changes to the database
+    await user.save()
+
+    return { status: 200 }
+  } catch (error) {
+    return { error: 'Internal Server Error' }
+  }
+}
 
 const findApiKey = async userId => {
   const existingApiKey = await models.ApiKey.findOne({ where: { userId: userId } })
@@ -75,4 +151,4 @@ const revokeApiKey = async userId => {
   }
 }
 
-module.exports = { generateApiKey, getApiKey, revokeApiKey }
+module.exports = { updateUserProfile, generateApiKey, getApiKey, revokeApiKey }

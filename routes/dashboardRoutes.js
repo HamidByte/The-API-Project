@@ -1,18 +1,32 @@
 const express = require('express')
+const requireSession = require('../middlewares/sessionMiddleware')
 const dashboardController = require('../controllers/dashboardController')
 
 const router = express.Router()
 
-// Middleware to check for a valid session
-const requireSession = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ error: 'Unauthorized' })
-  }
-  next()
-}
-
 // Apply the middleware to all routes in this router
 router.use(requireSession)
+
+router.post('/update-profile', async (req, res) => {
+  try {
+    const { username, firstName, lastName, password } = req.body
+
+    const result = await dashboardController.updateUserProfile(req.session.user.userId, {
+      username,
+      firstName,
+      lastName,
+      password
+    })
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'Profile updated successfully.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
 
 router.post('/generate', async (req, res) => {
   // const userId = req.userId // const { userId } = req

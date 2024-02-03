@@ -1,5 +1,4 @@
-const { models, Sequelize, sequelize } = require('../models')
-const { getRandomOrder } = require('../config/utils/databaseUtils')
+const { models, Sequelize } = require('../models')
 
 const handleServerError = (res, error, operation) => {
   const errorMessage = `${operation}: ${error.message}`
@@ -15,7 +14,7 @@ const handleServerError = (res, error, operation) => {
 const getRandomQuote = async (req, res) => {
   try {
     const quote = await models.Quote.findOne({
-      order: getRandomOrder(sequelize.getDialect())
+      order: Sequelize.literal('RANDOM()')
     })
 
     if (!quote) {

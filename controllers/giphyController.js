@@ -1,10 +1,9 @@
-const { models, Sequelize, sequelize } = require('../models')
-const { getRandomOrder } = require('../config/utils/databaseUtils')
+const { models, Sequelize } = require('../models')
 
 const getRandomGiphy = async (req, res) => {
   try {
     const giphy = await models.Giphy.findOne({
-      order: getRandomOrder(sequelize.getDialect())
+      order: Sequelize.literal('RANDOM()')
     })
 
     if (!giphy) {
@@ -32,8 +31,6 @@ const searchQuote = async (req, res) => {
         [Sequelize.Op.or]: [{ giphyTitle: { [Sequelize.Op.like]: `%${q}%` } }]
       }
     })
-
-    console.log(giphy)
 
     if (!giphy || giphy.length === 0) {
       return res.status(404).json({ found: false, message: 'No giphy found for the given query' })

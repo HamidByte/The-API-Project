@@ -5,18 +5,31 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
+        autoIncrement: true,
         unique: true,
-        autoIncrement: true
+        allowNull: false
       },
       quote: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
       },
       author: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
       },
       category: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
       }
     },
     {

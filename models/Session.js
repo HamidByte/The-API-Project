@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       sid: {
         type: DataTypes.STRING,
         primaryKey: true,
-        allowNull: false,
-        unique: true
+        unique: true,
+        allowNull: false
       },
       expires: {
         type: DataTypes.DATE,
@@ -18,6 +18,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.UUID,
+        defaultValue: null,
+        allowNull: true
+        // references: {
+        //   model: 'User',
+        //   key: 'uuid'
+        // }
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
       }
     },

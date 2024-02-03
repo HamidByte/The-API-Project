@@ -1,58 +1,52 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const connectSessionSequelize = require('connect-session-sequelize')(session.Store)
-const morgan = require('morgan')
-const useragent = require('express-useragent')
+const expressWinston = require('express-winston')
 const { sequelize } = require('./models')
-const logger = require('./utils/logger')
 const userAuthRoutes = require('./routes/userAuthRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
 const routes = require('./routes')
+const connectSequelizeSessionConfig = require('./config/connectSequelizeSession')
+const { customLogger } = require('./utils/loggerTransport')
+const { updateLoggerOptions } = require('./utils/updateLogger')
 
 require('dotenv').config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
-// Logging middleware
-app.use(morgan('combined'))
-
-// User agent middleware
-app.use(useragent.express())
-
-// Custom middleware to log and store information
-app.use(async (req, res, next) => {
-  // Use the logging utility to log and store information
-  await logger.requestLogger(req)
-
-  next()
-})
-
-// Use pg as the session store
-app.use(
-  session({
-    store: new connectSessionSequelize({
-      db: sequelize
-    }),
-    secret: process.env.SESSION_SECRET_KEY,
-    resave: false,
-    saveUninitialized: true, // Saves sessions for all visitors
-    cookie: {
-      secure: false, // Set to true if using HTTPS
-      maxAge: 3600000, // Set expiration time in milliseconds
-      httpOnly: true // HTTP only flag
-    }
-  })
-)
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// Define routes
-app.use('/agent', (req, res) => {
-  res.send({ useragent: req.useragent })
+app.set('trust proxy', true)
+
+// Use pg as the session store
+app.use(session(connectSequelizeSessionConfig))
+
+// Express middleware for logging with Winston
+app.use(
+  expressWinston.logger({
+    winstonInstance: customLogger,
+    statusLevels: true,
+    meta: true,
+    expressFormat: true,
+    colorize: false
+  })
+)
+
+// Custom middleware to store log activity
+app.use((req, res, next) => {
+  try {
+    updateLoggerOptions(req)
+
+    next()
+  } catch (error) {
+    console.error('Error logging request:', error)
+    next(error)
+  }
 })
+
+// Define routes
 app.use('/', userAuthRoutes)
 app.use('/', dashboardRoutes)
 app.use('/api', routes)
@@ -77,9 +71,9 @@ sequelize.sync().then(() => {
 })
 
 // Handle Promise Rejections
-if (process.env.NODE_ENV !== 'production') {
-  process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason)
-    // Handle the error, close database connections, etc.
-  })
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   process.on('unhandledRejection', (reason, promise) => {
+//     console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+//     // Handle the error, close database connections, etc.
+//   })
+// }

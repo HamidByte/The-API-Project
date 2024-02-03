@@ -5,37 +5,47 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
+        autoIncrement: true,
         unique: true,
-        autoIncrement: true
+        allowNull: false
       },
       gifId: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        unique: true,
+        allowNull: true
       },
       url: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       hash: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       fileSize: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       giphyTitle: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       importDate: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true
       },
       trendingDate: {
         type: DataTypes.DATE,
+        allowNull: true
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
       }
     },

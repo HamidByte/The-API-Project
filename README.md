@@ -11,21 +11,21 @@ Explore the API documentation on [Postman](https://www.postman.com/hamidbyte/wor
 Before you begin, ensure you have met the following requirements:
 
 - Node.js installed (https://nodejs.org/)
-- PostgreSQL or MySQL database installed and running
+- PostgreSQL installed and running
 - Git (optional, but recommended)
 
 ## Dependencies
 
 - Express.js
-- PostgreSQL or MySQL database
+- PostgreSQL
 - Sequelize ORM for database
 - ESLint for code linting
 - Session-based Authentication for Users
 - JWT Authentication for API Keys
 
-## Setting Up PostgreSQL or MySQL Server and Importing Database
+## Setting Up PostgreSQL Server and Importing Database
 
-Before running the server locally, ensure that you have set up your PostgreSQL or MySQL server. Import the provided database using the 'database.sql' file. Note the name of the imported database. You may need the database name when configuring the settings in `config/dbConfig.js`.
+Before running the server locally, ensure that you have set up your PostgreSQL. Import the provided database using the 'database.sql' file. Note the name of the imported database. You may need the database name when configuring the settings in `config/dbConfig.js`.
 
 If you're a developer making modifications to the project, refer to the 'Database Management with Sequelize ORM' section for detailed information on creating the database, migrations, and seeders.
 
@@ -51,11 +51,20 @@ If you're a developer making modifications to the project, refer to the 'Databas
    ```env
    SESSION_SECRET_KEY=your-secret-key
    API_SECRET_KEY=your-secret-key
+   DATABASE_URL=database-url
+   EMAIL_ADDRESS=your-email-address
+   EMAIL_PASSWORD=your-email-password
    ```
+
+   - A database URL is required if you intend to use a cloud database, and it's pre-configured for production.
+   - To customize, modify the `config/dbConfig.js` file as needed.
+   - Certain email services may block SMTP access. For Gmail, generate a Google app password, enabling the "less secure apps access" account setting in your Google account.
+   - Note that this setting is turned off by default, and you need to enable it.
+   - If you are using another email service provider that supports SMTP, update the settings in `config/emailConfig.js`.
 
 4. Configure the Database Settings:
 
-   Open `config/dbConfig.js` and update the fields below with your PostgreSQL or MySQL database details:
+   Open `config/dbConfig.js` and update the fields below with your PostgreSQL database details:
 
    ```json
    "development": {
@@ -68,8 +77,8 @@ If you're a developer making modifications to the project, refer to the 'Databas
    },
    ```
 
-   - The default port for PostgreSQL is 5432, and for MySQL is 3306.
-   - Set the "dialect" to "postgres" for PostgreSQL. Use "mysql" if you are using MySQL.
+   - The default port for PostgreSQL is 5432.
+   - Set the "dialect" to "postgres" for PostgreSQL.
    - After configuring the database settings, import the provided database using the 'database.sql' file.
 
 5. Start the server:
@@ -105,15 +114,14 @@ If you're a developer making modifications to the project, refer to the 'Databas
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "securePassword"}' http://localhost:3000/register
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "securePassword"}' http://localhost:3000/register
 ```
 
 **Response**
 
 ```json
 {
-  "uuid": "generatedUUID",
-  "email": "user@example.com"
+  "message": "User registered successfully. Please check your email for activation."
 }
 ```
 
@@ -126,15 +134,121 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "securePassword"}' http://localhost:3000/register
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "securePassword"}' http://localhost:3000/register
 ```
 
 **Response**
 
 ```json
 {
-  "uuid": "generatedUUID",
-  "email": "user@example.com"
+  "uuid": "generatedUUID"
+}
+```
+
+### Activate Account
+
+- **Endpoint:** `/activate?token=<token>`
+- **Method:** `GET`
+- **Description:** Activate a user account using the activation token sent via email.
+
+**Request**
+
+```bash
+curl -X GET http://localhost:3000/activate?token=3c857304-3ca3-48d1-b1e7-6d5a41230106
+```
+
+**Response:**
+
+```json
+{
+  "message": "User activated successfully"
+}
+```
+
+### Resend Activation Link
+
+- **Endpoint:** `/resend-activation`
+- **Method:** `POST`
+- **Description:** Resend the activation link to a user who hasn't activated the account within the specified time.
+
+**Request**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/resend-activation
+```
+
+**Response:**
+
+```json
+{
+  "message": "Activation link resent successfully. Please check your email for activation."
+}
+```
+
+### Forget Password
+
+- **Endpoint:** `/forget-password`
+- **Method:** `POST`
+- **Description:** Initiate the process of resetting the user's password by sending a reset link to their email.
+
+**Request**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/forget-password
+```
+
+**Response:**
+
+```json
+{
+  "message": "Password reset email sent successfully."
+}
+```
+
+### Reset Password
+
+- **Endpoint:** `/reset-password/:token`
+- **Method:** `POST`
+- **Description:** Reset the user's password using the reset token sent via email.
+- **Parameters:**
+  - `token`: Reset token received via email.
+
+**Request**
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/reset-password/3c857304-3ca3-48d1-b1e7-6d5a41230106
+```
+
+**Response:**
+
+```json
+{
+  "message": "Password reset successful."
+}
+```
+
+## Protected Routes
+
+Note: The authorization header requires a valid session.
+
+### Update User Profile
+
+- **Endpoint:** `/update-profile`
+- **Method:** `POST`
+- **Description:** Update the user's profile information, including first name, last name, and username.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"firstName": "John", "lastName": "Doe", "username": "john_doe", "password": ""}' http://localhost:3000/update-profile
+```
+
+**Response:**
+
+```json
+{
+  "message": "Profile updated successfully."
 }
 ```
 
@@ -143,6 +257,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 - **Endpoint:** `/generate`
 - **Method:** `POST`
 - **Description:** Generates a new API key for a user.
+- **Authorization:** Requires a valid session.
 
 **Request**
 
@@ -170,6 +285,7 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" -d "tokenExpiration=24h"
 - **Endpoint:** `/get-api`
 - **Method:** `PUT`
 - **Description:** Fetch the existing API key for a user.
+- **Authorization:** Requires a valid session.
 
 **Request**
 
@@ -197,6 +313,7 @@ curl -X PUT -H "Cookie: session=<your-session-cookie>" http://localhost:3000/get
 - **Endpoint:** `/revoke`
 - **Method:** `DELETE`
 - **Description:** Deletes the existing API key for a user.
+- **Authorization:** Requires a valid session.
 
 **Request**
 
@@ -214,13 +331,15 @@ curl -X DELETE -H "Cookie: session=<your-session-cookie>" http://localhost:3000/
 
 ## API Endpoints
 
+Note: The authorization header Requires a valid authentication token. Use the generated token in the `Authorization` header.
+
 ### Get Random Quote
 
 - **Endpoint:** `/api/v1/quote/random`
 - **Method:** `GET`
 - **Description:** Returns a random quote from the database.
 - **Example:** `http://localhost:3000/api/v1/quote/random`
-- **Authorization:** Requires a valid authentication token. Use the generated token in the `Authorization` header.
+- **Authorization:** Requires a valid authentication token.
 
 **Request**
 
@@ -250,7 +369,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Method:** `GET`
 - **Description:** Returns a quote with the specified ID.
 - **Example:** `http://localhost:3000/api/v1/quote/1`
-- **Authorization:** Requires a valid authentication token. Use the generated token in the `Authorization` header.
+- **Authorization:** Requires a valid authentication token.
 
 **Request**
 
@@ -280,7 +399,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Method:** `GET`
 - **Description:** Performs a case-insensitive search for a random quote based on the provided query string in the quote and category fields.
 - **Example:** `http://localhost:3000/api/v1/quote/search?q=lorem`
-- **Authorization:** Requires a valid authentication token. Use the generated token in the `Authorization` header.
+- **Authorization:** Requires a valid authentication token.
 
 **Request**
 
@@ -310,7 +429,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Method:** `GET`
 - **Description:** Returns a randomly selected quote from the list of quotes belonging to the specified category.
 - **Example:** `http://localhost:3000/api/v1/quote/category/inspiration`
-- **Authorization:** Requires a valid authentication token. Use the generated token in the `Authorization` header.
+- **Authorization:** Requires a valid authentication token.
 
 **Request**
 
@@ -340,7 +459,7 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Method:** `GET`
 - **Description:** Returns a randomly selected quote from the list of quotes written by the specified author.
 - **Example:** `http://localhost:3000/api/v1/quote/author/John Green`
-- **Authorization:** Requires a valid authentication token. Use the generated token in the `Authorization` header.
+- **Authorization:** Requires a valid authentication token.
 
 **Request**
 
@@ -367,6 +486,18 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 ## Acknowledgments
 
 Thank you to the open-source community for providing valuable tools and libraries.
+
+## Session Middleware
+
+We utilize `connect-session-sequelize` to automatically create a Session table in the database whenever a new session is initiated, ensuring synchronization with the database. This middleware tracks incoming requests, updating the session in the database, and responds with an encrypted cookie.
+
+In order to configure it to create a new column named `userId` with a default value of `null` and update it upon user login, note that `connect-session-sequelize` doesn't inherently support this feature. However, you can achieve this by manually modifying the table structure in your PostgreSQL database.
+
+Manually adjust the `Sessions` table in your PostgreSQL database by adding the `userId` column with a default value of `null`:
+
+```sql
+ALTER TABLE "Sessions" ADD COLUMN "userId" UUID DEFAULT NULL;
+```
 
 ## Database Management with Sequelize ORM
 

@@ -17,14 +17,23 @@ const models = {
 }
 
 // Establish associations
-const { User, Session, ApiKey } = models
+const { User, Session, Log, ApiKey } = models
 
-// Sessions and Users
+// User Deletion: When a User is deleted, associated Session and ApiKey records will also be deleted. This ensures that all related data for that user, except logs, is removed.
+// ApiKey Deletion: When an ApiKey is deleted, the associated User is not affected. However, deletion of a User will delete associated ApiKeys.
+// Session Deletion: When a Session is deleted, associated User records will not be deleted. This allows for session cleanup without affecting users.
+// Log Deletion: When a Log is deleted, User record will not delete. This allows you to delete log entries without affecting the associated user.
+
+// Users and ApiKeys
+User.hasOne(ApiKey, { foreignKey: 'userId' })
+ApiKey.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' })
+
+// Users and Sessions
 User.hasMany(Session, { foreignKey: 'userId', onDelete: 'CASCADE' })
-Session.belongsTo(User, { foreignKey: 'userId' })
+Session.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' })
 
-// ApiKeys and Users
-User.hasOne(ApiKey, { foreignKey: 'userId', onDelete: 'CASCADE' })
-ApiKey.belongsTo(User, { foreignKey: 'userId' })
+// Users and Logs
+User.hasMany(Log, { foreignKey: 'userId' })
+Log.belongsTo(User, { foreignKey: 'userId' })
 
 module.exports = { sequelize, Sequelize, models }

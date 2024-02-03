@@ -1,34 +1,46 @@
-const validator = require('validator')
+const { v4: uuidv4 } = require('uuid')
 const userAuthService = require('../services/userAuthService')
 const { Sequelize, models } = require('../models')
-
-// Check password strength
-const isStrongPassword = password => {
-  // Check if the password is at least 8 characters long and contains at least one letter and one number
-  return /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(password)
-}
+const { updateSession } = require('../utils/updateSession')
+const { sendActivationEmail, sendResetPasswordEmail } = require('../utils/emailNotification')
+const { validateUserEmail, validateUserPassword } = require('../utils/validation')
+const { hashPassword } = require('../utils/hashPassword')
+const userConfig = require('../config/userConfig')
 
 exports.registerUser = async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Validate input
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({ error: 'Invalid email address' })
+    // Validate user email
+    const isEmailValid = validateUserEmail(email)
+
+    if (isEmailValid.status === 'error') {
+      return res.status(400).json({ error: isEmailValid.message })
     }
 
-    // Additional validation for email and password (you can customize this)
-    // For example, check for spaces, hacking characters, etc.
+    // Validate user password
+    const isPasswordValid = validateUserPassword(password)
 
-    // Password strength check
-    if (!isStrongPassword(password)) {
-      return res.status(400).json({ error: 'Password must be at least 8 characters long and include both letters and numbers' })
+    if (isPasswordValid.status === 'error') {
+      return res.status(400).json({ error: isPasswordValid.message })
     }
 
     // Register the user
     const newUser = await userAuthService.registerUser(email, password)
 
-    res.json({ uuid: newUser.uuid, email: newUser.email })
+    // Generate activation token and send activation email
+    const activateToken = uuidv4()
+    const activateTokenExpiration = userConfig.activateTokenExpiration
+    newUser.activateToken = activateToken
+    newUser.activateTokenExpiration = activateTokenExpiration
+    await newUser.save()
+
+    sendActivationEmail(email, activateToken)
+
+    // Update session
+    await updateSession(req, newUser)
+
+    res.json({ message: 'User registered successfully. Please check your email for activation.' })
   } catch (error) {
     if (error instanceof Sequelize.UniqueConstraintError) {
       // Unique constraint violation (email already exists)
@@ -44,41 +56,170 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Validate input
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({ error: 'Invalid email address' })
+    // Validate user email
+    const isEmailValid = validateUserEmail(email)
+
+    if (isEmailValid.status === 'error') {
+      return res.status(400).json({ error: isEmailValid.message })
     }
 
-    // Password strength check
-    if (!isStrongPassword(password)) {
-      return res.status(400).json({ error: 'Invalid password' })
+    // Validate user password
+    const isPasswordValid = validateUserPassword(password)
+
+    if (isPasswordValid.status === 'error') {
+      return res.status(400).json({ error: isPasswordValid.message })
     }
 
     // Login the user
-    const user = await userAuthService.loginUser(email, password)
+    const result = await userAuthService.loginUser(email, password)
 
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' })
+    if (result.status === 'success') {
+      const user = result.user
+      // Update session
+      await updateSession(req, user)
+
+      res.json({ uuid: user.uuid })
+    } else {
+      // Respond with appropriate error message
+      res.status(401).json({ error: result.message })
     }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
 
-    // Store user information in the session
-    req.session.user = {
-      userId: user.uuid,
-      email: user.email
-    }
+exports.activateUser = async (req, res) => {
+  try {
+    const { token } = req.query
 
-    // Explicitly set userId in the Session model and Save the session with userId
-    const session = await models.Session.findOne({
-      where: { sid: req.sessionID }
+    const user = await models.User.findOne({
+      where: {
+        activateToken: token,
+        activateTokenExpiration: { [Sequelize.Op.gte]: new Date() }
+      }
     })
 
-    if (session) {
-      session.userId = user.uuid
-      await session.save()
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired token.' })
     }
 
-    // Respond with user details or a JWT token if using tokens for authentication
-    res.json({ uuid: user.uuid, email: user.email })
+    // Activate the user
+    user.isActive = true
+    user.activateToken = null
+    user.activateTokenExpiration = null
+    user.updatedAt = new Date()
+    await user.save()
+
+    res.json({ message: 'User activated successfully' })
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
+exports.resendActivation = async (req, res) => {
+  try {
+    const { email } = req.body
+
+    // Validate user email
+    const isEmailValid = validateUserEmail(email)
+
+    if (isEmailValid.status === 'error') {
+      return res.status(400).json({ error: isEmailValid.message })
+    }
+
+    const user = await models.User.findOne({
+      where: {
+        email
+      }
+    })
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' })
+    }
+
+    if (user.isActive) {
+      return res.status(400).json({ error: 'User is already activated' })
+    }
+
+    // Generate new token and send email
+    const newToken = uuidv4()
+    user.activateToken = newToken
+    user.activateTokenExpiration = userConfig.resendActivationExpiration
+    await user.save()
+
+    sendActivationEmail(email, newToken)
+
+    res.json({ message: 'Activation link resent successfully. Please check your email for activation.' })
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
+exports.forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body
+
+    // Validate user email
+    const isEmailValid = validateUserEmail(email)
+
+    if (isEmailValid.status === 'error') {
+      return res.status(400).json({ error: isEmailValid.message })
+    }
+
+    const user = await models.User.findOne({
+      where: {
+        email
+      }
+    })
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' })
+    }
+
+    // Generate a unique token for password reset
+    const resetToken = uuidv4()
+    const resetExpiration = userConfig.resetPasswordExpiration
+
+    // Store the token and expiration in the user's record
+    user.resetPasswordToken = resetToken
+    user.resetPasswordExpiration = resetExpiration
+    await user.save()
+
+    // Send a password reset email with the token
+    sendResetPasswordEmail(email, resetToken)
+
+    res.json({ message: 'Password reset email sent successfully.' })
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params
+    const { password } = req.body
+
+    // Validate user password
+    const isPasswordValid = validateUserPassword(password)
+
+    if (isPasswordValid.status === 'error') {
+      return res.status(400).json({ error: isPasswordValid.message })
+    }
+
+    // Validate token and get user
+    const user = await userAuthService.resetPassword(token)
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired token' })
+    }
+
+    // Update the user's password and reset token
+    user.password = await hashPassword(password)
+    user.resetPasswordToken = null
+    user.resetPasswordExpiration = null
+    await user.save()
+
+    res.json({ message: 'Password reset successful.' })
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' })
   }

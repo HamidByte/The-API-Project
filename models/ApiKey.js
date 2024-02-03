@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        allowNull: false,
-        unique: true
+        unique: true,
+        allowNull: false
       },
       token: {
         type: DataTypes.STRING,
@@ -21,8 +21,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.UUID,
-        allowNull: false,
-        unique: true
+        unique: true,
+        allowNull: false
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
       }
     },
     {

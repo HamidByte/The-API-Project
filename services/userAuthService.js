@@ -1,4 +1,4 @@
-const { models } = require('../models')
+const { Sequelize, models } = require('../models')
 
 exports.registerUser = async (email, password) => {
   try {
@@ -23,15 +23,35 @@ exports.loginUser = async (email, password) => {
 
     // User not found
     if (!user) {
-      return null
+      return { status: 'error', message: 'User not found' }
     }
 
     const isPasswordValid = await user.validPassword(password)
 
     // Invalid password
     if (!isPasswordValid) {
-      return null
+      return { status: 'error', message: 'Invalid password' }
     }
+
+    // User is not active
+    if (!user.isActive) {
+      return { status: 'error', message: 'User is not active' }
+    }
+
+    return { status: 'success', user }
+  } catch (error) {
+    throw error
+  }
+}
+
+exports.resetPassword = async token => {
+  try {
+    const user = await models.User.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpiration: { [Sequelize.Op.gte]: new Date() }
+      }
+    })
 
     return user
   } catch (error) {
