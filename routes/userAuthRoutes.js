@@ -9,5 +9,6 @@ router.get('/activate', userAuthController.activateUser)
 router.post('/resend-activation', userAuthController.resendActivation)
 router.post('/forget-password', userAuthController.forgetPassword)
 router.post('/reset-password/:token', userAuthController.resetPassword)
+router.delete('/delete/:userId', userAuthController.deleteUser)
 
 module.exports = router

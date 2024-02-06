@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false
       },
+      // deletedAt: {
+      //   type: DataTypes.DATE,
+      //   defaultValue: null,
+      //   allowNull: true
+      // },
       firstName: {
         type: DataTypes.STRING,
         allowNull: true
@@ -89,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: true // This option adds the createdAt and updatedAt fields
-      // paranoid: true // This option adds the deletedAt field for soft deletes
+      // paranoid: true // Enable soft deletes, add the deletedAt field for soft deletes
     }
   )
 

@@ -1,4 +1,4 @@
-# The API Project, Node, Express, PostgreSQL, Sequelize, Session, JWT
+# The API Project, Node, Express, PostgreSQL, Sequelize, Session, JWT, Logger
 
 TheAPIProject is a versatile and affordable API platform designed to provide developers with easy access to a diverse range of services. Initially conceived as a "Random Quote Generator API" the project is expanding its vision to encompass a rich collection of data services. Upcoming releases include GIFs, Dummy or Mock APIs for testing, Jokes, and more. With a focus on affordability and simplicity, TheAPIProject stands as the go-to solution for developers seeking dynamic content.
 
@@ -233,6 +233,27 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 ```json
 {
   "message": "Password reset successful."
+}
+```
+
+### Delete User
+
+- **Endpoint:** `/delete/:userId`
+- **Method:** `DELETE`
+- **Description:** Deletes the user account identified by userId.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X DELETE http://localhost:3000/delete/3c857304-3ca3-48d1-b1e7-6d5a41230106
+```
+
+**Response:**
+
+```json
+{
+  "message": "User deleted successfully."
 }
 ```
 
@@ -573,6 +594,20 @@ This command (`npx sequelize db:create`) is used to create the database as speci
 Migrations in Sequelize are scripts that define changes to your database schema, such as creating or modifying tables. The `npx sequelize db:migrate` command is used to apply any pending migrations in your Sequelize project.
 
 When you run `npx sequelize db:migrate`, Sequelize will search for pending migration files in the `migrations` directory and execute them in the order they were created. Each migration file contains JavaScript code that defines the changes to be made to the database schema. Migrations are crucial for managing database changes in a structured and version-controlled manner. They allow you to evolve your database schema over time while keeping track of changes, making collaboration with other developers more manageable.
+
+If you have modified the default configuration file (`config/config.json`) to use a custom configuration file (`config/dbConfig.js`), ensure that you use the `--config` option when running Sequelize CLI commands. For example:
+
+```bash
+npx sequelize-cli db:migrate --config config/dbConfig.js
+```
+
+Additionally, if you consistently want to use this custom configuration file without specifying it each time, consider creating a `.sequelizerc` file in your project's root directory. This file can specify the custom configuration file path for Sequelize CLI commands.
+
+With the .sequelizerc file in place, Sequelize CLI commands will automatically use the specified configuration file:
+
+```bash
+npx sequelize-cli db:migrate
+```
 
 ### Generating Migrations
 

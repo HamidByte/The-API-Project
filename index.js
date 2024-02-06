@@ -9,11 +9,22 @@ const routes = require('./routes')
 const connectSequelizeSessionConfig = require('./config/connectSequelizeSession')
 const { customLogger } = require('./utils/loggerTransport')
 const { updateLoggerOptions } = require('./utils/updateLogger')
+const cors = require('cors')
 
 require('dotenv').config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+// Enable CORS for all origins
+app.use(
+  cors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    optionsSuccessStatus: 204 // This is sent in response to OPTIONS requests to indicate success
+  })
+)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

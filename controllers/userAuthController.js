@@ -224,3 +224,27 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.session.user.userId
+
+    // Check if the authenticated user is trying to delete their own account
+    if (req.params.userId !== userId) {
+      return res.status(403).json({ error: 'Forbidden: You are not allowed to delete this user.' })
+    }
+
+    // Delete the user
+    await models.User.destroy({
+      where: {
+        uuid: userId
+      }
+    })
+
+    // Optionally, you can add logic to clean up associated data (e.g., sessions, logs, etc.)
+
+    res.json({ message: 'User deleted successfully.' })
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
