@@ -5,6 +5,9 @@ npm-debug.log
 yarn-error.log
 dist/
 
+# Mac OS
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -14,11 +17,8 @@ logs
 # Compiled binary addons (https://github.com/nodejs/node-gyp#the-gyp-environment-variable)
 build/  
 
-# Mac OS
-.DS_Store
-
 # dotenv environment file
 .env
 
-# VSCode settings
-.vscode/
+# Editor directories and files
+.vscode/*

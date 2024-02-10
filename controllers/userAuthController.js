@@ -44,7 +44,8 @@ exports.registerUser = async (req, res) => {
   } catch (error) {
     if (error instanceof Sequelize.UniqueConstraintError) {
       // Unique constraint violation (email already exists)
-      const errorMessage = error.errors[0].message
+      // const errorMessage = error.errors[0].message
+      const errorMessage = 'Email is already registered. Please use a different email.'
       return res.status(400).json({ error: errorMessage })
     } else {
       return res.status(500).json({ error: 'Internal Server Error' })
@@ -78,7 +79,7 @@ exports.loginUser = async (req, res) => {
       // Update session
       await updateSession(req, user)
 
-      res.json({ uuid: user.uuid, firstName: user.firstName, lastName: user.lastName, username: user.username, email: user.email, subscriptionStatus: user.subscriptionStatus, requestCount: user.requestCount, lastRequestDate: user.lastRequestDate, createdAt: user.createdAt, updatedAt: user.updatedAt })
+      res.json({ uuid: user.uuid, firstName: user.firstName, lastName: user.lastName, username: user.username, email: user.email, subscriptionStatus: user.subscriptionStatus, requestCount: user.requestCount, lastRequestDate: user.lastRequestDate, isActive: user.isActive, createdAt: user.createdAt, updatedAt: user.updatedAt })
     } else {
       // Respond with appropriate error message
       res.status(401).json({ error: result.message })
@@ -225,12 +226,37 @@ exports.resetPassword = async (req, res) => {
   }
 }
 
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.session?.user?.userId
+
+    // Check if the authenticated user is trying to get user
+    if (!userId) {
+      return res.status(403).json({ error: 'Forbidden: You are not allowed to get user information.' })
+    }
+
+    const user = await models.User.findOne({
+      where: {
+        uuid: userId
+      }
+    })
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' })
+    }
+
+    res.json({ uuid: user.uuid, firstName: user.firstName, lastName: user.lastName, username: user.username, email: user.email, subscriptionStatus: user.subscriptionStatus, requestCount: user.requestCount, lastRequestDate: user.lastRequestDate, isActive: user.isActive, createdAt: user.createdAt, updatedAt: user.updatedAt })
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.session.user.userId
+    const userId = req.session?.user?.userId
 
     // Check if the authenticated user is trying to delete their own account
-    if (req.params.userId !== userId) {
+    if (!userId) {
       return res.status(403).json({ error: 'Forbidden: You are not allowed to delete this user.' })
     }
 

@@ -149,6 +149,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
   "subscriptionStatus": "free",
   "requestCount": 0,
   "lastRequestDate": "2024-02-03T08:29:57.919Z",
+  "isActive": true,
   "createdAt": "2024-02-03T08:29:58.052Z",
   "updatedAt": "2024-02-03T08:30:11.702Z"
 }
@@ -236,17 +237,48 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 }
 ```
 
-### Delete User
+### Get User
 
-- **Endpoint:** `/delete/:userId`
-- **Method:** `DELETE`
-- **Description:** Deletes the user account identified by userId.
+- **Endpoint:** `/get-user`
+- **Method:** `GET`
+- **Description:** Get the user information.
 - **Authorization:** Requires a valid session.
 
 **Request**
 
 ```bash
-curl -X DELETE http://localhost:3000/delete/3c857304-3ca3-48d1-b1e7-6d5a41230106
+curl -X GET http://localhost:3000/get-user
+```
+
+**Response:**
+
+```json
+{
+  "uuid": "6a7b8c9d-1234-5678-90ab-cdef12345678",
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe123",
+  "email": "john.doe@example.com",
+  "subscriptionStatus": "free",
+  "requestCount": 0,
+  "lastRequestDate": "2024-02-03T08:29:57.919Z",
+  "isActive": true,
+  "createdAt": "2024-02-03T08:29:58.052Z",
+  "updatedAt": "2024-02-03T08:30:11.702Z"
+}
+```
+
+### Delete User
+
+- **Endpoint:** `/delete`
+- **Method:** `DELETE`
+- **Description:** Deletes the user account.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X DELETE http://localhost:3000/delete
 ```
 
 **Response:**

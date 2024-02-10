@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       message: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       authorization: {
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       cookie: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       host: {
@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       userAgentInfo: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       isMobile: {
@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       userAgent: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       httpVersion: {
