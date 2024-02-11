@@ -24,9 +24,11 @@ const connectSequelizeSessionConfig = {
   resave: false,
   saveUninitialized: true, // Saves sessions for all visitors
   cookie: {
+    // secure: process.env.NODE_ENV === 'production',
     secure: false, // Set to true if using HTTPS
     maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds
     httpOnly: true // HTTP only flag
+    // sameSite: 'None'
   }
 }
 

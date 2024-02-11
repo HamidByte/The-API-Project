@@ -23,7 +23,7 @@ exports.loginUser = async (email, password) => {
 
     // User not found
     if (!user) {
-      return { status: 'error', message: 'User not found' }
+      return { status: 'error', message: 'User not found.' }
     }
 
     const isPasswordValid = await user.validPassword(password)
@@ -31,11 +31,6 @@ exports.loginUser = async (email, password) => {
     // Invalid password
     if (!isPasswordValid) {
       return { status: 'error', message: 'Invalid password' }
-    }
-
-    // User is not active
-    if (!user.isActive) {
-      return { status: 'error', message: 'User is not active' }
     }
 
     return { status: 'success', user }

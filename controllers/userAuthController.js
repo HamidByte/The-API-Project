@@ -251,6 +251,36 @@ exports.getUser = async (req, res) => {
   }
 }
 
+exports.isUserActive = async (req, res) => {
+  try {
+    const userId = req.session?.user?.userId
+
+    // Check if the authenticated user is trying to get user
+    if (!userId) {
+      return res.status(403).json({ error: 'Forbidden: You are not allowed to get user activation status.' })
+    }
+
+    const user = await models.User.findOne({
+      where: {
+        uuid: userId
+      }
+    })
+
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' })
+    }
+
+    // Check if the user is activated
+    if (user.isActive) {
+      return res.json({ isActive: true, message: 'User is activated' })
+    } else {
+      return res.json({ isActive: false, message: 'User is not activated' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.session?.user?.userId

@@ -268,6 +268,37 @@ curl -X GET http://localhost:3000/get-user
 }
 ```
 
+### User Activation Status
+
+- **Endpoint:** `/is-user-active`
+- **Method:** `GET`
+- **Description:** Get the user's activation status.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X GET http://localhost:3000/is-user-active
+```
+
+**Response:**
+
+```json
+{
+  "isActive": false,
+  "message": "User is not activated"
+}
+```
+
+or
+
+```json
+{
+  "isActive": true,
+  "message": "User is activated"
+}
+```
+
 ### Delete User
 
 - **Endpoint:** `/delete`

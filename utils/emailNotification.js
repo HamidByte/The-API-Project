@@ -1,18 +1,18 @@
 const nodemailer = require('nodemailer')
 const emailConfig = require('../config/emailConfig')
-const { baseURL } = require('../config/serverConfig')
+const { baseURLFrontend } = require('../config/serverConfig')
 
 // Function to send activation email
 const sendActivationEmail = (email, token) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const activationLink = `${baseURL}/activate?token=${token}`
+  const activationLink = `${baseURLFrontend}/activate?token=${token}`
 
   const mailOptions = {
     from: emailConfig.activationEmail.from,
     to: email,
     subject: emailConfig.activationEmail.subject,
-    text: emailConfig.activationEmail.text(activationLink)
+    html: emailConfig.activationEmail.html(token, activationLink)
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -28,7 +28,7 @@ const sendActivationEmail = (email, token) => {
 const sendResetPasswordEmail = (email, token) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const resetLink = `${baseURL}/reset-password/${token}`
+  const resetLink = `${baseURLFrontend}/reset-password/${token}`
 
   const mailOptions = {
     from: emailConfig.resetPassword.from,
@@ -50,7 +50,7 @@ const sendResetPasswordEmail = (email, token) => {
 const sendConfirmEmailActivation = (email, token) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const activationLink = `${baseURL}/confirm-email?token=${token}&email=${email}`
+  const activationLink = `${baseURLFrontend}/confirm-email?token=${token}&email=${email}`
 
   const mailOptions = {
     from: emailConfig.confirmEmail.from,
