@@ -50,7 +50,7 @@ If you're a developer making modifications to the project, refer to the 'Databas
 
 3. Configure Environment Variables:
 
-   Create a .env file in the root of the project and set the following variables:
+   Create `.env.development` and `.env.production` files in the root of the project for the development and production environments, respectively and set the following variables in each file:
 
    ```env
    SESSION_SECRET_KEY=your-secret-key

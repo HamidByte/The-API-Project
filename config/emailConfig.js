@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 
 // configure your email transport options (SMTP, etc.)
 module.exports = {

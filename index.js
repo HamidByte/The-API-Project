@@ -11,7 +11,7 @@ const { customLogger } = require('./utils/loggerTransport')
 const { updateLoggerOptions } = require('./utils/updateLogger')
 const cors = require('cors')
 
-require('dotenv').config()
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 
 const app = express()
 const PORT = process.env.PORT || 3000
