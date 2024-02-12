@@ -145,20 +145,18 @@ const findApiKey = async userId => {
   return existingApiKey
 }
 
-const generateApiKey = async (tokenExpiration, userId) => {
+const generateApiKey = async (userId, tokenExpiration) => {
   try {
     // Check if a API key already exists for the user
     const existingApiKey = await findApiKey(userId)
 
     // Updating an existing resource would typically use a PUT request, POST can be used for both creation and updating
     if (existingApiKey) {
-      // Regenerate the API key and update it with a new value and modify the updatedAt field
-      const newToken = jwt.sign({ userId }, jwtOptions.secretKey, {
-        expiresIn: tokenExpiration || jwtOptions.tokenExpires
-      })
+      // Regenerate the API key and replace old token with a new token and modify the updatedAt field
+      const newToken = jwt.sign({ userId: userId }, jwtOptions.secretKey, { expiresIn: tokenExpiration || jwtOptions.tokenExpires }, { algorithms: jwtOptions.algorithm })
 
       existingApiKey.token = newToken
-      existingApiKey.tokenExpiration = tokenExpiration
+      existingApiKey.tokenExpiration = tokenExpiration || jwtOptions.tokenExpires
       existingApiKey.updatedAt = new Date()
       await existingApiKey.save()
 
@@ -166,12 +164,10 @@ const generateApiKey = async (tokenExpiration, userId) => {
     }
 
     // If no API key exists, generate a new one and save it to the database with expiration time
-    const newToken = jwt.sign({ userId }, jwtOptions.secretKey, {
-      expiresIn: tokenExpiration || jwtOptions.tokenExpires
-    })
+    const newToken = jwt.sign({ userId: userId }, jwtOptions.secretKey, { expiresIn: tokenExpiration || jwtOptions.tokenExpires }, { algorithms: jwtOptions.algorithm })
 
     // Save the API key in the database
-    const newApiKey = await models.ApiKey.create({ token: newToken, tokenExpiration: tokenExpiration, userId: userId })
+    const newApiKey = await models.ApiKey.create({ token: newToken, tokenExpiration: tokenExpiration || jwtOptions.tokenExpires, userId: userId })
 
     return newApiKey
   } catch (error) {

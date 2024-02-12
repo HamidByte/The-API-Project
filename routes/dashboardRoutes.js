@@ -66,7 +66,7 @@ router.post('/generate', async (req, res) => {
   // const userId = req.userId // const { userId } = req
   const { tokenExpiration } = req.body
   const userId = req.session.user.userId
-  const result = await dashboardController.generateApiKey(tokenExpiration, userId)
+  const result = await dashboardController.generateApiKey(userId, tokenExpiration)
 
   if (result.error) {
     res.status(result.status || 500).json({ error: result.error })

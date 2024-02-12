@@ -419,6 +419,8 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" -d "tokenExpiration=24h"
 }
 ```
 
+Note: When specifying the `tokenExpiration` in the request body, you have the option to provide it in a human-readable format such as `24h` or in seconds, for example, `86400`.
+
 ### Get API Key
 
 - **Endpoint:** `/get-api`
