@@ -93,6 +93,10 @@ exports.activateUser = async (req, res) => {
   try {
     const { token } = req.query
 
+    if (!token) {
+      return res.status(400).json({ error: 'Token is required.' })
+    }
+
     const user = await models.User.findOne({
       where: {
         activateToken: token,

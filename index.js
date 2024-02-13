@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3000
 app.use(
   cors({
     origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     optionsSuccessStatus: 204 // This is sent in response to OPTIONS requests to indicate success
   })
