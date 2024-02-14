@@ -1,12 +1,28 @@
 const express = require('express')
+const requireSession = require('../middlewares/sessionMiddleware')
+const apiRoutes = require('./apiRoutes')
+const publicRoutes = require('./publicRoutes')
+const userAuthRoutes = require('./userAuthRoutes')
+const dashboardRoutes = require('./dashboardRoutes')
 
-const quoteRoutes = require('./quoteRoutes')
-const giphyRoutes = require('./giphyRoutes')
+const apiRouter = express.Router()
+const publicRouter = express.Router()
+const userAuthRouter = express.Router()
+const dashboardRouter = express.Router()
 
-const router = express.Router()
+// Routes that do not require a session
+apiRouter.use('/', apiRoutes)
+publicRouter.use('/', publicRoutes)
 
-// Define routes
-router.use('/v1/quote', quoteRoutes)
-router.use('/v1/giphy', giphyRoutes)
+// Routes that require a session
+userAuthRouter.use(requireSession)
+dashboardRouter.use(requireSession)
+userAuthRouter.use('/', userAuthRoutes)
+dashboardRouter.use('/', dashboardRoutes)
 
-module.exports = router
+module.exports = {
+  apiRouter,
+  publicRouter,
+  userAuthRouter,
+  dashboardRouter
+}

@@ -3,9 +3,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const expressWinston = require('express-winston')
 const { sequelize } = require('./models')
-const userAuthRoutes = require('./routes/userAuthRoutes')
-const dashboardRoutes = require('./routes/dashboardRoutes')
-const routes = require('./routes')
+const { apiRouter, publicRouter, userAuthRouter, dashboardRouter } = require('./routes')
 const connectSequelizeSessionConfig = require('./config/connectSequelizeSession')
 const { customLogger } = require('./utils/loggerTransport')
 const { updateLoggerOptions } = require('./utils/updateLogger')
@@ -58,9 +56,10 @@ app.use((req, res, next) => {
 })
 
 // Define routes
-app.use('/', userAuthRoutes)
-app.use('/', dashboardRoutes)
-app.use('/api', routes)
+app.use('/api', apiRouter)
+app.use('/', publicRouter)
+app.use('/', userAuthRouter)
+app.use('/', dashboardRouter)
 
 // Error handling middleware
 app.use((error, req, res, next) => {

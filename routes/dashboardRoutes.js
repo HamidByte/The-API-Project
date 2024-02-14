@@ -1,11 +1,7 @@
 const express = require('express')
-const requireSession = require('../middlewares/sessionMiddleware')
 const dashboardController = require('../controllers/dashboardController')
 
 const router = express.Router()
-
-// Apply the middleware to all routes in this router
-router.use(requireSession)
 
 router.post('/update-profile', async (req, res) => {
   try {
@@ -66,6 +62,12 @@ router.post('/generate', async (req, res) => {
   // const userId = req.userId // const { userId } = req
   const { tokenExpiration } = req.body
   const userId = req.session.user.userId
+
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
+
   const result = await dashboardController.generateApiKey(userId, tokenExpiration)
 
   if (result.error) {
@@ -80,6 +82,11 @@ router.get('/api-key', async (req, res) => {
   // const { userId } = req.body
   const userId = req.session.user.userId
 
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
+
   const result = await dashboardController.getApiKey(userId)
 
   if (result.error) {
@@ -93,6 +100,11 @@ router.delete('/revoke', async (req, res) => {
   // const userId = req.userId // const { userId } = req
   // const { userId } = req.body
   const userId = req.session.user.userId
+
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
 
   const result = await dashboardController.revokeApiKey(userId)
 
