@@ -14,6 +14,11 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 const app = express()
 const PORT = process.env.PORT || 3000
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.set('trust proxy', true)
+
 // Enable CORS for all origins
 app.use(
   cors({
@@ -24,24 +29,8 @@ app.use(
   })
 )
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.set('trust proxy', true)
-
 // Use pg as the session store
 app.use(session(connectSequelizeSessionConfig))
-
-// Express middleware for logging with Winston
-app.use(
-  expressWinston.logger({
-    winstonInstance: customLogger,
-    statusLevels: true,
-    meta: true,
-    expressFormat: true,
-    colorize: false
-  })
-)
 
 // Custom middleware to store log activity
 app.use((req, res, next) => {
@@ -54,6 +43,17 @@ app.use((req, res, next) => {
     next(error)
   }
 })
+
+// Express middleware for logging with Winston
+app.use(
+  expressWinston.logger({
+    winstonInstance: customLogger,
+    statusLevels: true,
+    meta: true,
+    expressFormat: true,
+    colorize: false
+  })
+)
 
 // Define routes
 app.use('/api', apiRouter)

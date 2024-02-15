@@ -21,8 +21,8 @@ function updateLoggerOptions(req) {
   const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : ipv4
 
   // Capture information from the request and update the options
-  loggerOptions.additionalData.injectedUserId = req.session.user?.userId || null
-  loggerOptions.additionalData.injectedIpAddress = ip || null
+  loggerOptions.additionalData.injectedUserId = req.session?.user?.userId
+  loggerOptions.additionalData.injectedIpAddress = ip
 }
 
 module.exports = { loggerOptions, updateLoggerOptions }

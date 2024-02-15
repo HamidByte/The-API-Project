@@ -21,8 +21,8 @@ const sessionStore = new connectSequelizeSessionStore({
 const connectSequelizeSessionConfig = {
   store: sessionStore,
   secret: process.env.SESSION_SECRET_KEY,
-  resave: false,
-  saveUninitialized: true, // Saves sessions for all visitors
+  resave: false, // Don't save session if unmodified
+  saveUninitialized: false, // Don't create session until something stored. Saves sessions for all visitors.
   cookie: {
     // secure: process.env.NODE_ENV === 'production',
     secure: false, // Set to true if using HTTPS

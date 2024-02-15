@@ -11,8 +11,11 @@ const userAuthRouter = express.Router()
 const dashboardRouter = express.Router()
 
 // Routes that do not require a session
-apiRouter.use('/', apiRoutes)
+publicRouter.get('/', async (req, res) => {
+  res.send('The API Project')
+})
 publicRouter.use('/', publicRoutes)
+apiRouter.use('/', apiRoutes)
 
 // Routes that require a session
 userAuthRouter.use(requireSession)
@@ -21,8 +24,8 @@ userAuthRouter.use('/', userAuthRoutes)
 dashboardRouter.use('/', dashboardRoutes)
 
 module.exports = {
-  apiRouter,
   publicRouter,
+  apiRouter,
   userAuthRouter,
   dashboardRouter
 }

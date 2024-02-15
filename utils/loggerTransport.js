@@ -36,8 +36,8 @@ class RequestLogTransport extends Transport {
     const { level, message, ...meta } = info
 
     const log = {
-      userId: loggerOptions.additionalData.injectedUserId || null,
-      ipAddress: loggerOptions.additionalData.injectedIpAddress || null,
+      userId: loggerOptions.additionalData.injectedUserId,
+      ipAddress: loggerOptions.additionalData.injectedIpAddress,
       level: level || null,
       message: message || null,
       authorization: typeof meta.meta.req.headers['authorization'] === 'string',
