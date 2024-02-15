@@ -8,7 +8,7 @@ For the corresponding frontend, visit the [The API Project Frontend](https://git
 
 ## API Documentation
 
-Explore the API documentation on [Postman](https://www.postman.com/hamidbyte/workspace/the-api-project/overview).
+Explore the API documentation on [API Documentation](https://documenter.getpostman.com/view/11546737/2sA2r55Rev) and [Postman Workspace](https://www.postman.com/hamidbyte/workspace/the-api-project/overview).
 
 ## Prerequisites
 
