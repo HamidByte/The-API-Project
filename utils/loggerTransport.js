@@ -1,6 +1,6 @@
 const winston = require('winston')
 const { createLogger, format, transports } = winston
-const DailyRotateFile = require('winston-daily-rotate-file')
+// const DailyRotateFile = require('winston-daily-rotate-file')
 const Transport = require('winston-transport')
 const util = require('util')
 const { models } = require('../models')
@@ -68,16 +68,14 @@ class RequestLogTransport extends Transport {
       await models.Log.create(log)
     }
 
+    // Make sure to call the callback to signal that the log has been processed
     logQuery(error => {
       if (error) {
-        return handleCallback(callback, error)
+        handleCallback(callback, error)
+      } else {
+        handleCallback(callback, null, true)
       }
-
-      return handleCallback(callback, null, true)
     })
-
-    // Make sure to call the callback to signal that the log has been processed
-    // callback()
   }
 }
 

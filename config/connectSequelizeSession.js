@@ -1,6 +1,10 @@
 const session = require('express-session')
 const connectSequelizeSessionStore = require('connect-session-sequelize')(session.Store)
 const { sequelize } = require('../models')
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
+
+// Determine if the environment is production
+const isProduction = process.env.NODE_ENV === 'production'
 
 // Configure sessionStore for pg
 const sessionStore = new connectSequelizeSessionStore({
@@ -24,8 +28,7 @@ const connectSequelizeSessionConfig = {
   resave: false, // Don't save session if unmodified
   saveUninitialized: false, // Don't create session until something stored. Saves sessions for all visitors.
   cookie: {
-    // secure: process.env.NODE_ENV === 'production',
-    secure: false, // Set to true if using HTTPS
+    secure: isProduction, // Set to true if using HTTPS in production
     maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds
     httpOnly: true // HTTP only flag
     // sameSite: 'None'

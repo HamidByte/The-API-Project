@@ -52,12 +52,35 @@ If you're a developer making modifications to the project, refer to the 'Databas
 
    Create `.env.development` and `.env.production` files in the root of the project for the development and production environments, respectively and set the following variables in each file:
 
+   **.env.development:**
+
+   ```env
+   SESSION_SECRET_KEY=your-secret-key
+   API_SECRET_KEY=your-secret-key
+   EMAIL_ADDRESS=your-email-address
+   EMAIL_PASSWORD=your-email-password
+   BASE_URL_CLIENT=http://localhost:5173
+
+   # Server environmental variables (optional)
+   HOST=http://localhost
+   PORT=3000
+   BASE_URL_SERVER=http://localhost:3000
+   ```
+
+   **.env.production:**
+
    ```env
    SESSION_SECRET_KEY=your-secret-key
    API_SECRET_KEY=your-secret-key
    DATABASE_URL=database-url
    EMAIL_ADDRESS=your-email-address
    EMAIL_PASSWORD=your-email-password
+   BASE_URL_CLIENT=your-client-url
+
+   # Server environmental variables (optional)
+   HOST=http://localhost
+   PORT=3000
+   BASE_URL_SERVER=http://localhost:3000
    ```
 
    - A database URL is required if you intend to use a cloud database, and it's pre-configured for production.

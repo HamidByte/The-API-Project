@@ -1,3 +1,5 @@
+const { getUserIdFromAuthToken } = require('./getUserIdFromAuthToken')
+
 let loggerOptions = {
   postgresOptions: {
     level: 'info'
@@ -21,7 +23,7 @@ function updateLoggerOptions(req) {
   const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : ipv4
 
   // Capture information from the request and update the options
-  loggerOptions.additionalData.injectedUserId = req.session?.user?.userId
+  loggerOptions.additionalData.injectedUserId = req.session.user ? req.session.user.userId : getUserIdFromAuthToken(req)
   loggerOptions.additionalData.injectedIpAddress = ip
 }
 

@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 
     next()
   } catch (error) {
-    console.error('Error logging request:', error)
+    // console.error('Error logging request:', error)
     next(error)
   }
 })
