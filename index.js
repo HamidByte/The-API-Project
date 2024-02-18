@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const corsOptions = require('./config/corsOptions')
 const session = require('express-session')
 const expressWinston = require('express-winston')
 const { sequelize } = require('./models')
@@ -20,14 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.set('trust proxy', true)
 
 // Enable CORS for all origins
-app.use(
-  cors({
-    origin: true,
-    methods: ['GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-    optionsSuccessStatus: 204 // This is sent in response to OPTIONS requests to indicate success
-  })
-)
+app.use(cors(corsOptions))
 
 // Use pg as the session store
 app.use(session(connectSequelizeSessionConfig))

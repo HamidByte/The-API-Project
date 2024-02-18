@@ -15,9 +15,9 @@ const sessionStore = new connectSequelizeSessionStore({
   // Add the userId column to the list of columns that will be used by the session store
   extendDefaultFields: (defaults, session) => {
     return {
-      userId: session.user ? session.user.userId : null,
       data: defaults.data,
-      expires: defaults.expires
+      expires: defaults.expires,
+      userId: session.user ? session.user.userId : null
     }
   }
 })
@@ -30,8 +30,8 @@ const connectSequelizeSessionConfig = {
   cookie: {
     secure: isProduction, // Set to true if using HTTPS in production
     maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds
-    httpOnly: true // HTTP only flag
-    // sameSite: 'None'
+    httpOnly: true, // HTTP only flag
+    sameSite: isProduction ? 'none' : 'lax' // Must be 'none' to enable cross-site delivery
   }
 }
 
