@@ -1,19 +1,21 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const corsOptions = require('./config/corsOptions')
+const { port, baseURLServer } = require('./src/config/serverConfig')
+const corsOptions = require('./src/config/corsOptions')
 const session = require('express-session')
 const expressWinston = require('express-winston')
-const { sequelize } = require('./models')
-const { apiRouter, publicRouter, userAuthRouter, dashboardRouter } = require('./routes')
-const connectSequelizeSessionConfig = require('./config/connectSequelizeSession')
-const { customLogger } = require('./utils/loggerTransport')
-const { updateLoggerOptions } = require('./utils/updateLogger')
+const { sequelize } = require('./src/models')
+const { publicRouter, apiRouter, userAuthRouter, dashboardRouter } = require('./src/routes')
+const connectSequelizeSessionConfig = require('./src/config/connectSequelizeSession')
+const { customLogger } = require('./src/utils/loggerTransport')
+const { updateLoggerOptions } = require('./src/utils/updateLogger')
 const cors = require('cors')
 
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || port
+const BASE_URL = process.env.BASE_URL_SERVER || baseURLServer
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -50,8 +52,8 @@ app.use(
 )
 
 // Define routes
-app.use('/api', apiRouter)
 app.use('/', publicRouter)
+app.use('/api', apiRouter)
 app.use('/', userAuthRouter)
 app.use('/', dashboardRouter)
 
@@ -70,7 +72,7 @@ app.use((error, req, res, next) => {
 sequelize.sync().then(() => {
   console.log('Database synchronized successfully')
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
+    console.log(`Server is running on ${BASE_URL}`)
   })
 })
 

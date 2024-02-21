@@ -1,0 +1,118 @@
+const express = require('express')
+const dashboardController = require('../controllers/dashboardController')
+
+const router = express.Router()
+
+router.post('/update-profile', async (req, res) => {
+  try {
+    const { username, firstName, lastName, password } = req.body
+
+    const result = await dashboardController.updateUserProfile(req.session.user.userId, {
+      username,
+      firstName,
+      lastName,
+      password
+    })
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'Profile updated successfully.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+router.post('/update-email', async (req, res) => {
+  try {
+    const { email } = req.body
+
+    const result = await dashboardController.updateUserEmail(req.session.user.userId, {
+      email
+    })
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'A confirmation link has been sent to your email account.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+router.get('/confirm-email', async (req, res) => {
+  try {
+    const { token, email } = req.query
+
+    const result = await dashboardController.confirmEmailUpdate(token, email)
+
+    if (result.error) {
+      res.status(result.status).json({ error: result.error })
+    } else {
+      res.json({ message: 'User email updated successfully.' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+router.post('/generate', async (req, res) => {
+  // const userId = req.userId // const { userId } = req
+  const { tokenExpiration } = req.body
+  const userId = req.session.user.userId
+
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
+
+  const result = await dashboardController.generateApiKey(userId, tokenExpiration)
+
+  if (result.error) {
+    res.status(result.status || 500).json({ error: result.error })
+  } else {
+    res.json({ apiKey: result })
+  }
+})
+
+router.get('/api-key', async (req, res) => {
+  // const userId = req.userId // const { userId } = req
+  // const { userId } = req.body
+  const userId = req.session.user.userId
+
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
+
+  const result = await dashboardController.getApiKey(userId)
+
+  if (result.error) {
+    res.status(result.status || 500).json({ error: result.error })
+  } else {
+    res.json({ apiKey: result })
+  }
+})
+
+router.delete('/revoke', async (req, res) => {
+  // const userId = req.userId // const { userId } = req
+  // const { userId } = req.body
+  const userId = req.session.user.userId
+
+  // Check if the user is authorized (i.e. authenticated)
+  // if (!userId) {
+  //   res.status(403).json({ error: 'Forbidden: Unauthorized user.' })
+  // }
+
+  const result = await dashboardController.revokeApiKey(userId)
+
+  if (result.error) {
+    res.status(result.status || 500).json({ error: result.error })
+  } else {
+    res.json(result)
+  }
+})
+
+module.exports = router
