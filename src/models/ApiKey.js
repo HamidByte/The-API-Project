@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+const { generateRandomUUID } = require('../utils/uniqueIdentifiers')
 
 module.exports = (sequelize, DataTypes) => {
   const ApiKey = sequelize.define(
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
 
   // Generate a UUID before creating a new record
   ApiKey.beforeCreate(token => {
-    token.uuid = uuidv4()
+    token.uuid = generateRandomUUID()
   })
 
   // ApiKey.associate = models => {

@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+require('colors')
 const { port, baseURLServer } = require('./src/config/serverConfig')
 const corsOptions = require('./src/config/corsOptions')
 const session = require('express-session')
@@ -53,7 +54,7 @@ app.use(
 
 // Define routes
 app.use('/', publicRouter)
-app.use('/api', apiRouter)
+app.use('/', apiRouter)
 app.use('/', userAuthRouter)
 app.use('/', dashboardRouter)
 
@@ -70,9 +71,9 @@ app.use((error, req, res, next) => {
 
 // Sync database and start server
 sequelize.sync().then(() => {
-  console.log('Database synchronized successfully')
+  console.log('Database synchronized successfully'.green)
   app.listen(PORT, () => {
-    console.log(`Server is running on ${BASE_URL}`)
+    console.log(`Server is running on ${BASE_URL}`.blue)
   })
 })
 

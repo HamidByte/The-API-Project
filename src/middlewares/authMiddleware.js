@@ -48,6 +48,10 @@ const verifyToken = async (req, res, next) => {
       }
     })
 
+    if (!apiKeyExist) {
+      return res.status(401).json({ error: 'API key not matched in database.' })
+    }
+
     if (apiKeyExist.token !== token) {
       return res.status(401).json({ error: 'Invalid API key, please generate a new API key.' })
     }

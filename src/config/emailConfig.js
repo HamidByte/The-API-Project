@@ -13,9 +13,9 @@ module.exports = {
   activationEmail: {
     from: process.env.EMAIL_ADDRESS,
     subject: 'Activate Your Account',
-    text: activationLink => `Click on the following link to activate your account: ${activationLink}`,
-    html: (token, activationLink) => `
-    <h2 style="background-color: #e6f7ff; padding: 10px; border-radius: 5px;">${token}</h2>
+    // text: activationLink => `Click on the following link to activate your account: ${activationLink}`,
+    html: (userActivationCode, activationLink) => `
+    <h2 style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; text-align: center;">${userActivationCode}</h2>
     <p style="padding: 20px 0; font-weight: bold; font-size: 16px;">
       Alternatively, click on the following link to activate your account:
       <a href="${activationLink}" target="_blank" style="display: inline-block; padding: 0 10px; color: #007bff; text-decoration: none; font-weight: bold; font-size: 18px;">
@@ -31,7 +31,7 @@ module.exports = {
   },
   confirmEmail: {
     from: process.env.EMAIL_ADDRESS,
-    subject: 'Confirm Your Email Change',
-    text: resetLink => `Click on the following link to confirm the email change: ${resetLink}`
+    subject: 'Confirm Your New Email',
+    text: resetLink => `Click on the following link to confirm the new email address: ${resetLink}`
   }
 }

@@ -1,5 +1,5 @@
-const { v4: uuidv4 } = require('uuid')
 const bcrypt = require('bcrypt')
+const { generateRandomUUID } = require('../utils/uniqueIdentifiers')
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -39,12 +39,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
+      role: {
+        type: DataTypes.ENUM('user', 'admin'),
+        defaultValue: 'user',
+        allowNull: false
+      },
       subscriptionStatus: {
         type: DataTypes.ENUM('free', 'premium'),
         defaultValue: 'free',
         allowNull: false
       },
       requestCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+      },
+      creditCount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: false
@@ -65,18 +75,18 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
         allowNull: true
       },
-      activateToken: {
-        type: DataTypes.UUID,
+      userActivationCode: {
+        type: DataTypes.STRING,
         defaultValue: null,
         unique: true,
         allowNull: true
       },
-      activateTokenExpiration: {
+      userActivationExpiration: {
         type: DataTypes.DATE,
         defaultValue: null,
         allowNull: true
       },
-      isActive: {
+      isConfirmed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false
@@ -106,7 +116,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.beforeCreate(async user => {
     // Generate a UUID before creating a new record
-    user.uuid = uuidv4()
+    user.uuid = generateRandomUUID()
 
     // Hash the password before storing it in the database
     user.password = await bcrypt.hash(user.password, 10) // 10 is the number of salt rounds

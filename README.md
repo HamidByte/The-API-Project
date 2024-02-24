@@ -142,4 +142,4 @@ If you're a developer making modifications to the project, refer to the 'Databas
 
 ## Acknowledgments
 
-Thank you to the open-source community for providing valuable tools and libraries.
+We express our gratitude to the open-source community for their invaluable contributions, which have played a pivotal role in enhancing our project by providing essential tools and libraries.

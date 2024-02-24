@@ -16,7 +16,7 @@ publicRouter.get('/', async (req, res) => {
 })
 
 publicRouter.use('/', publicRoutes)
-apiRouter.use('/', apiRoutes)
+apiRouter.use('/api', apiRoutes)
 
 // Routes that require a session
 userAuthRouter.use(requireSession)

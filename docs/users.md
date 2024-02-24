@@ -2,16 +2,35 @@
 
 Note: The request header requires a valid cookie.
 
+You can send a request with a cookie using either `-b` or `-H` in curl. Both options can be used to send cookies in a request, but they serve slightly different purposes:
+
+`-b`: This option is specifically designed for sending cookies. It allows you to specify the cookie data directly. For example:
+
+```bash
+curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-user
+```
+
+`-H`: This option is used to include additional HTTP headers in the request. While you can use it to send cookies by specifying the Cookie header, it's a more general-purpose option. For example:
+
+```bash
+curl -X GET -H "Cookie: connect.sid=your-session-cookie-value" http://localhost:3000/get-user
+```
+
+In the context of sending cookies, both options can achieve the same result. You can choose the one that you find more convenient or readable. The examples above demonstrate the use of both options for sending cookies.
+
 ### Activate Account
 
-- **Endpoint:** `/activate?token=<token>`
+- **Endpoint:** `/activate?code=<code>`
 - **Method:** `GET`
-- **Description:** Activate a user account using the activation token sent via email.
+- **Description:** Activate a user account using the activation code sent via email.
+- **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `code`: Activation code received via email
 
 **Request**
 
 ```bash
-curl -X GET http://localhost:3000/activate?token=3c857304-3ca3-48d1-b1e7-6d5a41230106
+curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/activate?code=F68536
 ```
 
 **Response:**
@@ -27,11 +46,14 @@ curl -X GET http://localhost:3000/activate?token=3c857304-3ca3-48d1-b1e7-6d5a412
 - **Endpoint:** `/resend-activation`
 - **Method:** `POST`
 - **Description:** Resend the activation link to a user who hasn't activated the account within the specified time.
+- **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `email`: Your email address
 
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/resend-activation
+curl -X POST -b "connect.sid=your-session-cookie-value" -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/resend-activation
 ```
 
 **Response:**
@@ -52,7 +74,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 **Request**
 
 ```bash
-curl -X GET http://localhost:3000/get-user
+curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-user
 ```
 
 **Response:**
@@ -64,10 +86,12 @@ curl -X GET http://localhost:3000/get-user
   "lastName": "Doe",
   "username": "johndoe123",
   "email": "john.doe@example.com",
+  "role": "user",
   "subscriptionStatus": "free",
   "requestCount": 0,
+  "creditCount": 0,
   "lastRequestDate": "2024-02-03T08:29:57.919Z",
-  "isActive": true,
+  "isConfirmed": true,
   "createdAt": "2024-02-03T08:29:58.052Z",
   "updatedAt": "2024-02-03T08:30:11.702Z"
 }
@@ -83,14 +107,14 @@ curl -X GET http://localhost:3000/get-user
 **Request**
 
 ```bash
-curl -X GET http://localhost:3000/is-user-active
+curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/is-user-active
 ```
 
 **Response:**
 
 ```json
 {
-  "isActive": false,
+  "isConfirmed": false,
   "message": "User is not activated"
 }
 ```
@@ -99,7 +123,7 @@ or
 
 ```json
 {
-  "isActive": true,
+  "isConfirmed": true,
   "message": "User is activated"
 }
 ```
@@ -114,7 +138,7 @@ or
 **Request**
 
 ```bash
-curl -X DELETE http://localhost:3000/delete
+curl -X DELETE -b "connect.sid=your-session-cookie-value" http://localhost:3000/delete
 ```
 
 **Response:**
@@ -125,21 +149,22 @@ curl -X DELETE http://localhost:3000/delete
 }
 ```
 
-## Protected Routes
-
-Note: The authorization header requires a valid session.
-
 ### Update User Profile
 
 - **Endpoint:** `/update-profile`
 - **Method:** `POST`
 - **Description:** Update the user's profile information, including first name, last name, and username.
 - **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `firstName`: Your first name
+  - `lastName`: Your last name
+  - `username`: Your username
+  - `password`: Your new password
 
 **Request**
 
 ```bash
-curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"firstName": "John", "lastName": "Doe", "username": "john_doe", "password": ""}' http://localhost:3000/update-profile
+curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John", "lastName": "Doe", "username": "john_doe", "password": ""}' http://localhost:3000/update-profile
 ```
 
 **Response:**
@@ -156,11 +181,13 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"firstName": "John"
 - **Method:** `POST`
 - **Description:** Request to update the user's email address.
 - **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `email`: Your new email address
 
 **Request**
 
 ```bash
-curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"email": "john.doe@example.com"}' http://localhost:3000/update-email
+curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@example.com"}' http://localhost:3000/update-email
 ```
 
 **Response:**
@@ -177,11 +204,14 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" -d '{"email": "john.doe@
 - **Method:** `POST`
 - **Description:** Confirm the email activation link to update the user's email address.
 - **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `email`: Your new email address
+  - `code`: Activation code received via email
 
 **Request**
 
 ```bash
-curl -X POST -H "Cookie: session=<your-session-cookie>" http://localhost:3000/confirm-email?token=01abca7e-e185-46f5-a420-85cc43191698&email=john.doe@example.com
+curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/confirm-email?code=F68536&email=john.doe@example.com
 ```
 
 **Response:**
@@ -198,11 +228,13 @@ curl -X POST -H "Cookie: session=<your-session-cookie>" http://localhost:3000/co
 - **Method:** `POST`
 - **Description:** Generates a new API key for a user.
 - **Authorization:** Requires a valid session.
+- **Parameters:**
+  - `tokenExpiration`: Token expiration
 
 **Request**
 
 ```bash
-curl -X POST -H "Cookie: session=<your-session-cookie>" -d "tokenExpiration=24h" http://localhost:3000/generate
+curl -X POST -b "connect.sid=your-session-cookie-value" -d "tokenExpiration=24h" http://localhost:3000/generate
 ```
 
 **Response**
@@ -232,7 +264,7 @@ Note: When specifying the `tokenExpiration` in the request body, you have the op
 **Request**
 
 ```bash
-curl -X PUT -H "Cookie: session=<your-session-cookie>" http://localhost:3000/get-api
+curl -X PUT -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-api
 ```
 
 **Response**
@@ -260,7 +292,7 @@ curl -X PUT -H "Cookie: session=<your-session-cookie>" http://localhost:3000/get
 **Request**
 
 ```bash
-curl -X DELETE -H "Cookie: session=<your-session-cookie>" http://localhost:3000/revoke
+curl -X DELETE -b "connect.sid=your-session-cookie-value" http://localhost:3000/revoke
 ```
 
 **Response**

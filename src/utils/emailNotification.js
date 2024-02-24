@@ -3,16 +3,16 @@ const emailConfig = require('../config/emailConfig')
 const { baseURLClient } = require('../config/serverConfig')
 
 // Function to send activation email
-const sendActivationEmail = (email, token) => {
+const sendActivationEmail = (email, userActivationCode) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const activationLink = `${baseURLClient}/activate?token=${token}`
+  const activationLink = `${baseURLClient}/activate?code=${userActivationCode}`
 
   const mailOptions = {
     from: emailConfig.activationEmail.from,
     to: email,
     subject: emailConfig.activationEmail.subject,
-    html: emailConfig.activationEmail.html(token, activationLink)
+    html: emailConfig.activationEmail.html(userActivationCode, activationLink)
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -25,16 +25,16 @@ const sendActivationEmail = (email, token) => {
 }
 
 // Function to send password reset email
-const sendResetPasswordEmail = (email, token) => {
+const sendResetPasswordEmail = (email, resetToken) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const resetLink = `${baseURLClient}/reset-password/${token}`
+  const resetLink = `${baseURLClient}/reset-password/${resetToken}`
 
   const mailOptions = {
     from: emailConfig.resetPassword.from,
     to: email,
     subject: emailConfig.resetPassword.subject,
-    text: emailConfig.activationEmail.text(resetLink)
+    text: emailConfig.resetPassword.text(resetLink)
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -47,10 +47,10 @@ const sendResetPasswordEmail = (email, token) => {
 }
 
 // Function to send activation email to confirm email change
-const sendConfirmEmailActivation = (email, token) => {
+const sendConfirmEmailActivation = (email, userActivationCode) => {
   const transporter = nodemailer.createTransport(emailConfig)
 
-  const activationLink = `${baseURLClient}/confirm-email?token=${token}&email=${email}`
+  const activationLink = `${baseURLClient}/confirm-email?code=${userActivationCode}&email=${email}`
 
   const mailOptions = {
     from: emailConfig.confirmEmail.from,

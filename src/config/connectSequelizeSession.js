@@ -6,7 +6,7 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 // Determine if the environment is production
 const isProduction = process.env.NODE_ENV === 'production'
 
-// Configure sessionStore for pg
+// Configure ConnectSessionSequelize for postgreSQL
 const sessionStore = new connectSequelizeSessionStore({
   db: sequelize,
   table: 'Session',
@@ -22,6 +22,7 @@ const sessionStore = new connectSequelizeSessionStore({
   }
 })
 
+// Configure ExpressSession for client
 const connectSequelizeSessionConfig = {
   store: sessionStore,
   secret: process.env.SESSION_SECRET_KEY,
@@ -29,8 +30,8 @@ const connectSequelizeSessionConfig = {
   saveUninitialized: false, // Don't create session until something stored. Saves sessions for all visitors.
   cookie: {
     secure: isProduction, // Set to true if using HTTPS in production
-    maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds
-    httpOnly: true, // HTTP only flag
+    maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds (1 day in this case)
+    httpOnly: false, // When setting this to true, clients will not allow client-side JavaScript to access the cookie
     sameSite: isProduction ? 'none' : 'lax' // Must be 'none' to enable cross-site delivery
   }
 }

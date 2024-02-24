@@ -1,6 +1,7 @@
 const { models } = require('../models')
 const subscriptionConfig = require('../config/subscriptionConfig')
-const updateRequestCount = require('../utils/updateRequestCount')
+const resetCreditCount = require('../utils/resetCreditCount')
+const ROUTES = require('../utils/definitions/routes')
 
 const checkSubscription = async (req, res, next) => {
   try {
@@ -18,18 +19,34 @@ const checkSubscription = async (req, res, next) => {
       return res.status(404).json({ error: 'User not found.' })
     }
 
-    // Update the request count after every new month since last request
-    updateRequestCount(user)
+    // Reset the credit counts after every new month since last request
+    resetCreditCount(user)
+
+    // Increment credit counts for all users, including premium users, based on the API credits requirement
+    const endpointFound = Object.values(ROUTES).some(route => req.originalUrl.includes(route))
+
+    if (endpointFound) {
+      // Check if the endpoint is for OCR API
+      if (req.originalUrl.includes(ROUTES.OCR)) {
+        user.creditCount += subscriptionConfig.credits.ocr
+      } else {
+        // For other APIs, use standard credits
+        user.creditCount += subscriptionConfig.credits.standard
+      }
+      // Endpoint found but req.originalUrl does not match any ROUTES definitions
+    } else {
+      // Endpoint not found in ROUTES definitions, use zero credits
+      user.creditCount += subscriptionConfig.credits.none
+    }
 
     // Check the user's subscription and request count monthly limit
     const monthlyLimit = subscriptionConfig.monthlyLimits[user.subscriptionStatus]
 
-    if (user.requestCount >= monthlyLimit) {
-      return res.status(403).json({ message: `Monthly request limit reached. ${subscriptionConfig.subscriptionTypes.free} users cannot request more than ${subscriptionConfig.monthlyLimits[user.subscriptionStatus]} api requests per month.` })
+    if (user.creditCount >= monthlyLimit + 1) {
+      return res.status(403).json({ message: `Monthly request limit exceeded. Users with a ${subscriptionConfig.subscriptionTypes.free} subscription are restricted to a maximum of ${subscriptionConfig.monthlyLimits[user.subscriptionStatus]} API requests per month.` })
     }
 
-    // Increment requestCount for all users, including premium users
-    user.requestCount += 1
+    user.requestCount += 1 // Grand total request counts
     user.lastRequestDate = new Date()
     await user.save()
 

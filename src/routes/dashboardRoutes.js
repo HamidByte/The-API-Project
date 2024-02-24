@@ -28,9 +28,7 @@ router.post('/update-email', async (req, res) => {
   try {
     const { email } = req.body
 
-    const result = await dashboardController.updateUserEmail(req.session.user.userId, {
-      email
-    })
+    const result = await dashboardController.updateUserEmail(req.session.user.userId, email)
 
     if (result.error) {
       res.status(result.status).json({ error: result.error })
@@ -44,9 +42,9 @@ router.post('/update-email', async (req, res) => {
 
 router.get('/confirm-email', async (req, res) => {
   try {
-    const { token, email } = req.query
+    const { code, email } = req.query
 
-    const result = await dashboardController.confirmEmailUpdate(token, email)
+    const result = await dashboardController.confirmEmailUpdate(req.session.user.userId, email, code)
 
     if (result.error) {
       res.status(result.status).json({ error: result.error })
