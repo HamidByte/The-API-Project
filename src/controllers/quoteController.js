@@ -39,10 +39,11 @@ const searchQuote = async (req, res) => {
   try {
     const quotes = await models.Quote.findAll({
       where: {
-        // Use Sequelize's "Op.like" operator for a case-insensitive search
+        // Use Sequelize's "Op.like" operator for a case-sensitive search
+        // Use Sequelize's "Op.iLike" operator for a case-insensitive search (PG only)
         [Sequelize.Op.or]: [
-          { quote: { [Sequelize.Op.like]: `%${q}%` } }, // Search in the quote field
-          { category: { [Sequelize.Op.like]: `%${q}%` } } // Search in the category field
+          { quote: { [Sequelize.Op.iLike]: `%${q}%` } }, // Search in the quote field
+          { category: { [Sequelize.Op.iLike]: `%${q}%` } } // Search in the category field
         ]
       }
     })
@@ -82,7 +83,7 @@ const getQuoteByCategory = async (req, res) => {
   try {
     const quotes = await models.Quote.findAll({
       where: {
-        category: { [Sequelize.Op.like]: `%${category}%` }
+        category: { [Sequelize.Op.iLike]: `%${category}%` }
       }
     })
 
@@ -105,7 +106,7 @@ const getQuoteByAuthor = async (req, res) => {
   try {
     const quotes = await models.Quote.findAll({
       where: {
-        author: { [Sequelize.Op.like]: `%${author}%` }
+        author: { [Sequelize.Op.iLike]: `%${author}%` }
       }
     })
 

@@ -32,9 +32,9 @@ Currently, the API supports the following languages, which must be written as la
 
 | Lang Code | Language           |
 | --------- | ------------------ |
-| deu       | German             |
 | eng       | English            |
 | fra       | French             |
+| deu       | German             |
 | hin       | Hindi              |
 | ita       | Italian            |
 | rus       | Russian            |

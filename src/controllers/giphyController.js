@@ -28,7 +28,7 @@ const searchQuote = async (req, res) => {
   try {
     const giphy = await models.Giphy.findAll({
       where: {
-        [Sequelize.Op.or]: [{ giphyTitle: { [Sequelize.Op.like]: `%${q}%` } }]
+        [Sequelize.Op.or]: [{ giphyTitle: { [Sequelize.Op.iLike]: `%${q}%` } }]
       }
     })
 
