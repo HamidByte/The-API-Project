@@ -68,7 +68,7 @@ const getQuoteById = async (req, res) => {
     const quote = await models.Quote.findByPk(id)
 
     if (!quote) {
-      return res.status(404).json({ found: false, message: 'Quote not found' })
+      return res.status(404).json({ found: false, message: 'No quote found for the given id' })
     }
 
     res.json({ found: true, quote })

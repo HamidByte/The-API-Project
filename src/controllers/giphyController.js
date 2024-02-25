@@ -52,7 +52,7 @@ const getGiphyById = async (req, res) => {
     const giphy = await models.Giphy.findByPk(id)
 
     if (!giphy) {
-      return res.status(404).json({ found: false, message: 'Giphy not found' })
+      return res.status(404).json({ found: false, message: 'No giphy found for the given id' })
     }
 
     res.json({ found: true, giphy })
@@ -70,7 +70,7 @@ const getGiphyByGifId = async (req, res) => {
     })
 
     if (!giphy) {
-      return res.status(404).json({ found: false, message: 'Giphy not found' })
+      return res.status(404).json({ found: false, message: 'No giphy found for the given gifId' })
     }
 
     res.json({ found: true, giphy })
