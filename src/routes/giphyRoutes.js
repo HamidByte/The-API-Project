@@ -15,6 +15,6 @@ router.get('/search', verifyToken, checkSubscription, giphyController.searchQuot
 router.get('/:id', verifyToken, checkSubscription, giphyController.getGiphyById)
 
 // GET /:gifId
-router.get('/gif/:gifId', verifyToken, checkSubscription, giphyController.getGiphyByGifId)
+router.get('/gifid/:gifId', verifyToken, checkSubscription, giphyController.getGiphyByGifId)
 
 module.exports = router
