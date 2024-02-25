@@ -34,7 +34,7 @@ exports.registerUser = async (req, res) => {
     newUser.userActivationExpiration = userConfig.userActivationExpiration
     await newUser.save()
 
-    sendActivationEmail(email, userActivationCode)
+    await sendActivationEmail(email, userActivationCode)
 
     // Update session
     await updateSession(req, newUser)
@@ -47,7 +47,7 @@ exports.registerUser = async (req, res) => {
       const errorMessage = 'Email is already registered. Please use a different email.'
       return res.status(400).json({ error: errorMessage })
     } else {
-      return res.status(500).json({ error: 'Internal Server Error' })
+      return res.status(500).json({ error: error.message || 'Internal Server Error' })
     }
   }
 }
@@ -119,11 +119,11 @@ exports.forgetPassword = async (req, res) => {
     await user.save()
 
     // Send a password reset email with the code
-    sendResetPasswordEmail(email, resetToken)
+    await sendResetPasswordEmail(email, resetToken)
 
     res.json({ message: 'Password reset email sent successfully.' })
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
+    res.status(500).json({ error: error.message || 'Internal Server Error' })
   }
 }
 

@@ -2,7 +2,7 @@ const { Sequelize, models } = require('../models')
 const jwt = require('jsonwebtoken')
 const { generateVerificationCode } = require('../utils/uniqueIdentifiers')
 const jwtOptions = require('../config/jwtOptions')
-const { sendConfirmEmailActivation } = require('../utils/emailNotification')
+const { sendConfirmActivationEmail } = require('../utils/emailNotification')
 const { validateUserEmail, validateUserPassword, validateName, validateUsername } = require('../utils/validation')
 const { hashPassword } = require('../utils/hashPassword')
 const userConfig = require('../config/userConfig')
@@ -106,11 +106,11 @@ const updateUserEmail = async (userId, newEmail) => {
     // Save the verification code and send email change confirmation link
     await models.User.update({ userActivationCode: userActivationCode, userActivationExpiration: userActivationExpiration }, { where: { uuid: userId } })
 
-    sendConfirmEmailActivation(email, userActivationCode)
+    await sendConfirmActivationEmail(email, userActivationCode)
 
     return { status: 200 }
   } catch (error) {
-    return { error: 'Internal Server Error' }
+    return { error: error.message, status: 500 }
   }
 }
 

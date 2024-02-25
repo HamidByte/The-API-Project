@@ -69,11 +69,11 @@ exports.resendActivation = async (req, res) => {
     user.userActivationExpiration = userConfig.resendActivationExpiration
     await user.save()
 
-    sendActivationEmail(email, newVerificationCode)
+    await sendActivationEmail(email, newVerificationCode)
 
     res.json({ message: 'Activation link resent successfully. Please check your email for activation.' })
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
+    res.status(500).json({ error: error.message || 'Internal Server Error' })
   }
 }
 
