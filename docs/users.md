@@ -198,20 +198,19 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@
 }
 ```
 
-### Confirm Email Activation Link
+### Confirm Update User Email
 
-- **Endpoint:** `/confirm-email`
+- **Endpoint:** `/confirm-email/:token`
 - **Method:** `POST`
 - **Description:** Confirm the email activation link to update the user's email address.
 - **Authorization:** Requires a valid session.
 - **Parameters:**
   - `email`: Your new email address
-  - `code`: Activation code received via email
 
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/confirm-email?code=F68536&email=john.doe@example.com
+curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/confirm-email/3b8397dd-5b7c-4bd0-8e05-6f24bfdfb139
 ```
 
 **Response:**
@@ -257,14 +256,14 @@ Note: When specifying the `tokenExpiration` in the request body, you have the op
 ### Get API Key
 
 - **Endpoint:** `/get-api`
-- **Method:** `PUT`
+- **Method:** `GET`
 - **Description:** Fetch the existing API key for a user.
 - **Authorization:** Requires a valid session.
 
 **Request**
 
 ```bash
-curl -X PUT -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-api
+curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-api
 ```
 
 **Response**

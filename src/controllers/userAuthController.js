@@ -1,6 +1,6 @@
 const { Sequelize, models } = require('../models')
 const { generateVerificationCode } = require('../utils/uniqueIdentifiers')
-const { sendActivationEmail } = require('../utils/emailNotification')
+const { sendUserActivationEmail } = require('../utils/emails/sendEmail')
 const { validateUserEmail } = require('../utils/validation')
 const userConfig = require('../config/userConfig')
 
@@ -69,7 +69,7 @@ exports.resendActivation = async (req, res) => {
     user.userActivationExpiration = userConfig.resendActivationExpiration
     await user.save()
 
-    await sendActivationEmail(email, newVerificationCode)
+    await sendUserActivationEmail(email, newVerificationCode)
 
     res.json({ message: 'Activation link resent successfully. Please check your email for activation.' })
   } catch (error) {
@@ -83,7 +83,7 @@ exports.getUser = async (req, res) => {
 
     // Check if the authenticated user is trying to get user
     if (!userId) {
-      return res.status(403).json({ error: 'Forbidden: You are not allowed to get user information.' })
+      return res.status(401).json({ error: 'Forbidden: You are not allowed to get user information.' })
     }
 
     const user = await models.User.findOne({
@@ -108,7 +108,7 @@ exports.isUserActive = async (req, res) => {
 
     // Check if the authenticated user is trying to get user
     if (!userId) {
-      return res.status(403).json({ error: 'Forbidden: You are not allowed to get user activation status.' })
+      return res.status(401).json({ error: 'Forbidden: You are not allowed to get user activation status.' })
     }
 
     const user = await models.User.findOne({
@@ -138,7 +138,7 @@ exports.deleteUser = async (req, res) => {
 
     // Check if the authenticated user is trying to delete their own account
     if (!userId) {
-      return res.status(403).json({ error: 'Forbidden: You are not allowed to delete this user.' })
+      return res.status(401).json({ error: 'Forbidden: You are not allowed to delete this user.' })
     }
 
     // Delete the user

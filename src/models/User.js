@@ -75,6 +75,17 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
         allowNull: true
       },
+      changeEmailToken: {
+        type: DataTypes.UUID,
+        unique: true,
+        defaultValue: null,
+        allowNull: true
+      },
+      changeEmailExpiration: {
+        type: DataTypes.DATE,
+        defaultValue: null,
+        allowNull: true
+      },
       userActivationCode: {
         type: DataTypes.STRING,
         defaultValue: null,

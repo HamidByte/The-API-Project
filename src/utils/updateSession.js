@@ -3,6 +3,7 @@ const { models } = require('../models')
 async function updateSession(req, user) {
   try {
     const { uuid } = user
+    const { email } = user
 
     // Look for the sid in database by current server's sessionID
     const session = await models.Session.findOne({
@@ -17,12 +18,13 @@ async function updateSession(req, user) {
     // Set user details in the current server session
     // connectSequelizeSession will automatically sync it with database
     req.session.user = {
-      userId: uuid
+      userId: uuid,
+      email: email
     }
 
-    // Explicitly update Session table for userId
+    // Explicitly update Session table in the database for userId
     if (session && userIdColumnExists) {
-      session.userId = user.uuid
+      session.userId = uuid
       await session.save()
     } else {
       // If the session doesn't exist, create it with userId

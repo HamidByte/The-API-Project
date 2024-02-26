@@ -2,7 +2,7 @@ const { Sequelize, models } = require('../models')
 const userService = require('../services/userService')
 const { generateVerificationCode, generateCryptoUUID } = require('../utils/uniqueIdentifiers')
 const { updateSession } = require('../utils/updateSession')
-const { sendActivationEmail, sendResetPasswordEmail } = require('../utils/emailNotification')
+const { sendUserActivationEmail, sendResetPasswordEmail } = require('../utils/emails/sendEmail')
 const { validateUserEmail, validateUserPassword } = require('../utils/validation')
 const { hashPassword } = require('../utils/hashPassword')
 const userConfig = require('../config/userConfig')
@@ -34,7 +34,7 @@ exports.registerUser = async (req, res) => {
     newUser.userActivationExpiration = userConfig.userActivationExpiration
     await newUser.save()
 
-    await sendActivationEmail(email, userActivationCode)
+    await sendUserActivationEmail(email, userActivationCode)
 
     // Update session
     await updateSession(req, newUser)
@@ -109,17 +109,17 @@ exports.forgetPassword = async (req, res) => {
       return res.status(400).json({ error: 'User not found' })
     }
 
-    // Generate a unique verification code for password reset)
-    const resetToken = generateCryptoUUID()
-    const resetExpiration = userConfig.resetPasswordExpiration
+    // Generate a unique verification token for reset password
+    const resetPasswordToken = generateCryptoUUID()
+    const resetPasswordTokenExpiration = userConfig.resetPasswordExpiration
 
-    // Store the code and expiration in the user's record
-    user.resetPasswordToken = resetToken
-    user.resetPasswordExpiration = resetExpiration
+    // Store the token and expiration in the user's record
+    user.resetPasswordToken = resetPasswordToken
+    user.resetPasswordExpiration = resetPasswordTokenExpiration
     await user.save()
 
-    // Send a password reset email with the code
-    await sendResetPasswordEmail(email, resetToken)
+    // Send a password reset email with the token
+    await sendResetPasswordEmail(email, resetPasswordToken)
 
     res.json({ message: 'Password reset email sent successfully.' })
   } catch (error) {
@@ -132,6 +132,10 @@ exports.resetPassword = async (req, res) => {
     const { token } = req.params
     const { password } = req.body
 
+    if (!token) {
+      return res.status(400).json({ error: 'Token is required.' })
+    }
+
     // Validate user password
     const isPasswordValid = validateUserPassword(password)
 
@@ -139,7 +143,7 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ error: isPasswordValid.message })
     }
 
-    // Validate verification code and get user
+    // Validate verification token and get user
     const user = await userService.resetPassword(token)
 
     if (!user) {
