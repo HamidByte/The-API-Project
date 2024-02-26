@@ -66,7 +66,7 @@ const sendResetPasswordEmail = async (email, resetToken) => {
 // Send activation email to confirm email change
 const sendChangeEmailConfirmActivationEmail = async (oldEmail, newEmail, changeEmailToken) => {
   const changeEmailLink = `${baseURLClient}/confirm-email/${changeEmailToken}`
-  const htmlContent = generateChangeEmailHTML(oldEmail, changeEmailToken, changeEmailLink)
+  const htmlContent = generateChangeEmailHTML(oldEmail, newEmail, changeEmailLink)
 
   const transporter = nodemailer.createTransport(emailConfig.transportOptions)
 

@@ -27,19 +27,17 @@ const generatePasswordResetEmailHTML = (email, resetPasswordLink) => {
   `
 }
 
-const generateChangeEmailHTML = (email, changeEmailToken, changeEmailLink) => {
+const generateChangeEmailHTML = (oldEmail, newEmail, changeEmailLink) => {
   return `
-  Dear ${email}
+  Dear ${oldEmail}
   <br /><br />
-  You have requested to change your email address. You are expected to change or retain your current email.
+  You have requested to change your email address to ${newEmail}. You are expected to change or retain your current email.
   <br /><br />
-  To complete your registration, please enter the following code.
-  <br />
-  <h2 style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; text-align: center;">${changeEmailToken}</h2>
-  <br />
-  Alternatively, click the link below to change your email address: ${changeEmailLink}
+  Click on the following link to change your email address: ${changeEmailLink}
   <br /><br />
   <em><strong>This link will expire in 24 hours</strong></em>
+  <br /><br />
+  If you did not try to change an email address, you can safely ignore this email.
   `
 }
 
