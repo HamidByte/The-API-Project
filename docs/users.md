@@ -175,11 +175,11 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John"
 }
 ```
 
-### Update User Email
+### Change User Email
 
-- **Endpoint:** `/update-email`
+- **Endpoint:** `/change-email`
 - **Method:** `POST`
-- **Description:** Request to update the user's email address.
+- **Description:** Request to change the user's email address.
 - **Authorization:** Requires a valid session.
 - **Parameters:**
   - `email`: Your new email address
@@ -187,7 +187,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John"
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@example.com"}' http://localhost:3000/update-email
+curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@example.com"}' http://localhost:3000/change-email
 ```
 
 **Response:**
@@ -198,11 +198,11 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@
 }
 ```
 
-### Confirm Update User Email
+### Confirm Change User Email
 
 - **Endpoint:** `/confirm-email/:token`
 - **Method:** `POST`
-- **Description:** Confirm the email activation link to update the user's email address.
+- **Description:** Confirm the email activation link to change the user's email address.
 - **Authorization:** Requires a valid session.
 - **Parameters:**
   - `email`: Your new email address
@@ -217,7 +217,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/co
 
 ```json
 {
-  "message": "User email updated successfully."
+  "message": "User email changed successfully."
 }
 ```
 

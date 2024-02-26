@@ -81,7 +81,7 @@ const updateUserProfile = async (userId, updatedData) => {
   }
 }
 
-const updateUserEmail = async (userId, oldEmail, newEmail) => {
+const changeUserEmail = async (userId, oldEmail, newEmail) => {
   try {
     // Validate user email
     const isEmailValid = validateUserEmail(newEmail)
@@ -112,7 +112,7 @@ const updateUserEmail = async (userId, oldEmail, newEmail) => {
   }
 }
 
-const confirmUserEmailUpdate = async (userId, email, token) => {
+const confirmChangeUserEmail = async (userId, email, token) => {
   try {
     if (!token) {
       return { error: 'Token is required.', status: 400 }
@@ -134,7 +134,7 @@ const confirmUserEmailUpdate = async (userId, email, token) => {
       return { error: 'Invalid or expired token.', status: 400 }
     }
 
-    // Update the user email and reset token
+    // Change the user email and reset token
     user.changeEmailToken = null
     user.changeEmailExpiration = null
     user.email = email
@@ -215,4 +215,4 @@ const revokeApiKey = async userId => {
   }
 }
 
-module.exports = { updateUserProfile, updateUserEmail, confirmUserEmailUpdate, generateApiKey, getApiKey, revokeApiKey }
+module.exports = { updateUserProfile, changeUserEmail, confirmChangeUserEmail, generateApiKey, getApiKey, revokeApiKey }

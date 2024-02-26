@@ -59,9 +59,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 }
 ```
 
-### Forget Password
+### Forgot Password
 
-- **Endpoint:** `/forget-password`
+- **Endpoint:** `/forgot-password`
 - **Method:** `POST`
 - **Description:** Initiate the process of resetting the user's password by sending a reset link to their email.
 - **Parameters:**
@@ -70,7 +70,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/forget-password
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/forgot-password
 ```
 
 **Response:**

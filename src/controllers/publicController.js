@@ -88,7 +88,7 @@ exports.loginUser = async (req, res) => {
   }
 }
 
-exports.forgetPassword = async (req, res) => {
+exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body
 
