@@ -1,20 +1,21 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-require('colors')
-const { port, baseURLServer } = require('./src/config/serverConfig')
+const cors = require('cors')
 const corsOptions = require('./src/config/corsOptions')
 const session = require('express-session')
+const connectSequelizeSessionConfig = require('./src/config/connectSequelizeSession')
+const { updateLoggerOptions } = require('./src/utils/updateLogger')
 const expressWinston = require('express-winston')
+const { customLogger } = require('./src/utils/loggerTransport')
 const { sequelize } = require('./src/models')
 const { publicRouter, apiRouter, userAuthRouter, dashboardRouter } = require('./src/routes')
-const connectSequelizeSessionConfig = require('./src/config/connectSequelizeSession')
-const { customLogger } = require('./src/utils/loggerTransport')
-const { updateLoggerOptions } = require('./src/utils/updateLogger')
-const cors = require('cors')
 
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
+const { host, port, baseURLServer } = require('./src/config/serverConfig')
+require('colors')
 
 const app = express()
+const HOST = process.env.HOST || host
 const PORT = process.env.PORT || port
 const BASE_URL = process.env.BASE_URL_SERVER || baseURLServer
 
@@ -72,7 +73,7 @@ app.use((error, req, res, next) => {
 // Sync database and start server
 sequelize.sync().then(() => {
   console.log('Database synchronized successfully'.green)
-  app.listen(PORT, () => {
+  app.listen(PORT, HOST, () => {
     console.log(`Server is running on ${BASE_URL}`.blue)
   })
 })
