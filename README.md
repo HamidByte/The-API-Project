@@ -74,7 +74,7 @@ If you're a developer making modifications to the project, refer to the `Databas
    BASE_URL_CLIENT=http://localhost:5173
 
    # Server environmental variables (optional)
-   HOST=http://localhost
+   HOST=localhost
    PORT=3000
    BASE_URL_SERVER=http://localhost:3000
    ```
@@ -90,7 +90,7 @@ If you're a developer making modifications to the project, refer to the `Databas
    BASE_URL_CLIENT=your-client-url
 
    # Server environmental variables (optional)
-   HOST=http://localhost
+   HOST=localhost
    PORT=3000
    BASE_URL_SERVER=http://localhost:3000
    ```
