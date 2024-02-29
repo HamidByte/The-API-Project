@@ -11,12 +11,12 @@ const { sequelize } = require('./src/models')
 const { publicRouter, apiRouter, userAuthRouter, dashboardRouter } = require('./src/routes')
 
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
-const { host, port, baseURLServer } = require('./src/config/serverConfig')
+const { hostName, portNumber, baseURLServer } = require('./src/config/serverConfig')
 require('colors')
 
 const app = express()
-const HOST = process.env.HOST || host
-const PORT = process.env.PORT || port
+const HOST = process.env.HOST || hostName
+const PORT = process.env.PORT || portNumber
 const BASE_URL = process.env.BASE_URL_SERVER || baseURLServer
 
 app.use(bodyParser.json())
@@ -73,9 +73,16 @@ app.use((error, req, res, next) => {
 // Sync database and start server
 sequelize.sync().then(() => {
   console.log('Database synchronized successfully'.green)
-  app.listen(PORT, HOST, () => {
-    console.log(`Server is running on ${BASE_URL}`.blue)
-  })
+
+  if (process.env.NODE_ENV === 'production') {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`.blue)
+    })
+  } else {
+    app.listen(PORT, HOST, () => {
+      console.log(`Server is running on ${BASE_URL}`.blue)
+    })
+  }
 })
 
 // Handle Promise Rejections

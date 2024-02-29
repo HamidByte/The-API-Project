@@ -32,7 +32,7 @@ const connectSequelizeSessionConfig = {
     secure: isProduction, // Set to true if using HTTPS in production
     maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds (1 day in this case)
     httpOnly: false, // When setting this to true, clients will not allow client-side JavaScript to access the cookie
-    sameSite: isProduction ? 'none' : 'lax' // Must be 'none' to enable cross-site delivery
+    sameSite: isProduction ? 'none' : 'lax' // Must be 'none' to enable cross-site delivery. If sameSite is 'none' then secure must be true.
   }
 }
 
