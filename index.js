@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+// const https = require('https')
 const corsOptions = require('./src/config/corsOptions')
 const session = require('express-session')
 const connectSequelizeSessionConfig = require('./src/config/connectSequelizeSession')
@@ -9,6 +10,7 @@ const expressWinston = require('express-winston')
 const { customLogger } = require('./src/utils/loggerTransport')
 const { sequelize } = require('./src/models')
 const { publicRouter, apiRouter, userAuthRouter, dashboardRouter } = require('./src/routes')
+// const httpsOptions = require('./src/config/httpsOptions')
 
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 const { hostName, portNumber, baseURLServer } = require('./src/config/serverConfig')
@@ -19,13 +21,13 @@ const HOST = process.env.HOST || hostName
 const PORT = process.env.PORT || portNumber
 const BASE_URL = process.env.BASE_URL_SERVER || baseURLServer
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
 app.set('trust proxy', true)
 
 // Enable CORS for all origins
 app.use(cors(corsOptions))
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Use pg as the session store
 app.use(session(connectSequelizeSessionConfig))
@@ -82,6 +84,10 @@ sequelize.sync().then(() => {
     app.listen(PORT, HOST, () => {
       console.log(`Server is running on ${BASE_URL}`.blue)
     })
+
+    // https.createServer(httpsOptions, app).listen(PORT, HOST, () => {
+    //   console.log(`Server is running on ${BASE_URL}`.blue)
+    // })
   }
 })
 

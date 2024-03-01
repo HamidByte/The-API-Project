@@ -88,7 +88,7 @@ router.post('/generate', async (req, res) => {
   if (result.error) {
     res.status(result.status || 500).json({ error: result.error })
   } else {
-    res.json({ apiKey: result })
+    res.json(result)
   }
 })
 
@@ -102,7 +102,7 @@ router.get('/api-key', async (req, res) => {
   if (result.error) {
     res.status(result.status || 500).json({ error: result.error })
   } else {
-    res.json({ apiKey: result })
+    res.json(result)
   }
 })
 

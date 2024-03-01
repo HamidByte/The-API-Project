@@ -162,7 +162,6 @@ const generateApiKey = async (userId, tokenExpiration) => {
       const newToken = jwt.sign({ userId: userId }, jwtOptions.secretKey, { expiresIn: tokenExpiration || jwtOptions.tokenExpires }, { algorithms: jwtOptions.algorithm })
 
       existingApiKey.token = newToken
-      existingApiKey.tokenExpiration = tokenExpiration || jwtOptions.tokenExpires
       existingApiKey.updatedAt = new Date()
       await existingApiKey.save()
 
@@ -173,7 +172,7 @@ const generateApiKey = async (userId, tokenExpiration) => {
     const newToken = jwt.sign({ userId: userId }, jwtOptions.secretKey, { expiresIn: tokenExpiration || jwtOptions.tokenExpires }, { algorithms: jwtOptions.algorithm })
 
     // Save the API key in the database
-    const newApiKey = await models.ApiKey.create({ token: newToken, tokenExpiration: tokenExpiration || jwtOptions.tokenExpires, userId: userId })
+    const newApiKey = await models.ApiKey.create({ token: newToken, userId: userId })
 
     return newApiKey
   } catch (error) {

@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      tokenExpiration: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
       userId: {
         type: DataTypes.UUID,
         unique: true,

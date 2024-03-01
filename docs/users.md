@@ -240,14 +240,11 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d "tokenExpiration=24h"
 
 ```json
 {
-  "apiKey": {
-    "uuid": "generated-uuid",
-    "token": "generated-token",
-    "tokenExpiration": "24h",
-    "userId": "user-id",
-    "createdAt": "timestamp",
-    "updatedAt": "timestamp"
-  }
+  "uuid": "generated-uuid",
+  "token": "generated-token",
+  "userId": "user-id",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
 }
 ```
 
@@ -270,14 +267,11 @@ curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get
 
 ```json
 {
-  "apiKey": {
-    "uuid": "generated-uuid",
-    "token": "generated-token",
-    "tokenExpiration": "24h",
-    "userId": "user-id",
-    "createdAt": "timestamp",
-    "updatedAt": "timestamp"
-  }
+  "uuid": "generated-uuid",
+  "token": "generated-token",
+  "userId": "user-id",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
 }
 ```
 
