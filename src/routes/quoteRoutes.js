@@ -1,29 +1,29 @@
 const express = require('express')
-const verifyToken = require('../middlewares/authMiddleware')
-const checkSubscription = require('../middlewares/checkSubscriptionMiddleware')
+const verifyApiKey = require('../middlewares/apiKeyMiddleware')
+const verifySubscription = require('../middlewares/subscriptionMiddleware')
 const quoteController = require('../controllers/quoteController')
 
 const router = express.Router()
 
 // GET /random
-router.get('/random', verifyToken, checkSubscription, quoteController.getRandomQuote)
+router.get('/random', verifyApiKey, verifySubscription, quoteController.getRandomQuote)
 
 // GET /search?q=query
-router.get('/search', verifyToken, checkSubscription, quoteController.searchQuote)
+router.get('/search', verifyApiKey, verifySubscription, quoteController.searchQuote)
 
 // GET /:id
-router.get('/:id', verifyToken, checkSubscription, quoteController.getQuoteById)
+router.get('/:id', verifyApiKey, verifySubscription, quoteController.getQuoteById)
 
 // GET /category/:category
-router.get('/category/:category', verifyToken, checkSubscription, quoteController.getQuoteByCategory)
+router.get('/category/:category', verifyApiKey, verifySubscription, quoteController.getQuoteByCategory)
 
 // GET /author/:author
-router.get('/author/:author', verifyToken, checkSubscription, quoteController.getQuoteByAuthor)
+router.get('/author/:author', verifyApiKey, verifySubscription, quoteController.getQuoteByAuthor)
 
 // // GET /
-// router.get('/', verifyToken, checkSubscription, quoteController.getAllQuotes)
+// router.get('/', verifyApiKey, verifySubscription, quoteController.getAllQuotes)
 
 // POST /
-// router.post('/', verifyToken, checkSubscription, quoteController.insertNewQuote)
+// router.post('/', verifyApiKey, verifySubscription, quoteController.insertNewQuote)
 
 module.exports = router

@@ -1,20 +1,20 @@
 const express = require('express')
-const verifyToken = require('../middlewares/authMiddleware')
-const checkSubscription = require('../middlewares/checkSubscriptionMiddleware')
+const verifyApiKey = require('../middlewares/apiKeyMiddleware')
+const verifySubscription = require('../middlewares/subscriptionMiddleware')
 const giphyController = require('../controllers/giphyController')
 
 const router = express.Router()
 
 // GET /random
-router.get('/random', verifyToken, checkSubscription, giphyController.getRandomGiphy)
+router.get('/random', verifyApiKey, verifySubscription, giphyController.getRandomGiphy)
 
 // GET /search?q=query
-router.get('/search', verifyToken, checkSubscription, giphyController.searchQuote)
+router.get('/search', verifyApiKey, verifySubscription, giphyController.searchQuote)
 
 // GET /:id
-router.get('/:id', verifyToken, checkSubscription, giphyController.getGiphyById)
+router.get('/:id', verifyApiKey, verifySubscription, giphyController.getGiphyById)
 
 // GET /:gifId
-router.get('/gifid/:gifId', verifyToken, checkSubscription, giphyController.getGiphyByGifId)
+router.get('/gifid/:gifId', verifyApiKey, verifySubscription, giphyController.getGiphyByGifId)
 
 module.exports = router

@@ -94,7 +94,7 @@ const getImageToText = async (req, res) => {
       const result = await worker.recognize(req.file.path)
 
       // Send a response back to the client
-      // console.log('OCR Data', result.data)
+      // result.data
       res.status(200).json(result.data.text)
 
       // Delete the uploaded file after processing

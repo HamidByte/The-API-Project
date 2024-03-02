@@ -3,7 +3,8 @@ const subscriptionConfig = require('../config/subscriptionConfig')
 const resetCreditCount = require('../utils/resetCreditCount')
 const ROUTES = require('../utils/definitions/routes')
 
-const checkSubscription = async (req, res, next) => {
+// Check subscription
+const verifySubscription = async (req, res, next) => {
   try {
     // const { userId } = req.body // const userId = req.body.userId
     const userId = req.userId
@@ -63,4 +64,4 @@ const checkSubscription = async (req, res, next) => {
   }
 }
 
-module.exports = checkSubscription
+module.exports = verifySubscription

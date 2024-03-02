@@ -13,8 +13,8 @@ const handleServerError = (res, error, operation) => {
   }
 }
 
-// Authenticate
-const verifyToken = async (req, res, next) => {
+// Authenticate API Key
+const verifyApiKey = async (req, res, next) => {
   try {
     const authorizationHeader = req.headers.authorization
 
@@ -24,7 +24,7 @@ const verifyToken = async (req, res, next) => {
 
     const token = authorizationHeader.split(' ')[1]
 
-    // verify a token symmetric
+    // Verify a token symmetric
     try {
       var decodedToken = jwt.verify(token, jwtOptions.secretKey, { algorithms: jwtOptions.algorithm })
     } catch (error) {
@@ -65,4 +65,4 @@ const verifyToken = async (req, res, next) => {
   }
 }
 
-module.exports = verifyToken
+module.exports = verifyApiKey

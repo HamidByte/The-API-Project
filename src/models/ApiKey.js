@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   // Generate a UUID before creating a new record
-  ApiKey.beforeCreate(token => {
-    token.uuid = generateRandomUUID()
+  ApiKey.beforeCreate(apiKey => {
+    apiKey.uuid = generateRandomUUID()
   })
 
   // ApiKey.associate = models => {

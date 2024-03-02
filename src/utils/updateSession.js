@@ -4,12 +4,14 @@ async function updateSession(req, user) {
   try {
     const { uuid } = user
     const { email } = user
+    const { role } = user
 
     // Set user details in the current server session
     // connectSequelizeSession will automatically sync it with database
     req.session.user = {
       userId: uuid,
-      email: email
+      email: email,
+      role: role
     }
 
     // Look for the sid in database by current server's sessionID
