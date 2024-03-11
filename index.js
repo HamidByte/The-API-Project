@@ -86,7 +86,7 @@ sequelize.sync().then(() => {
     //   console.log(`Server is running on ${BASE_URL}`.blue)
     // })
   } else {
-    app.listen(PORT, () => {
+    app.listen(PORT, HOST, () => {
       console.log(`Server is running on ${BASE_URL}`.blue)
     })
   }
