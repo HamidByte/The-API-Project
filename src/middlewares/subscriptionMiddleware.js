@@ -20,6 +20,11 @@ const verifySubscription = async (req, res, next) => {
       return res.status(404).json({ error: 'User not found.' })
     }
 
+    // User confirmation status
+    if (!user.isConfirmed) {
+      return res.status(401).json({ error: 'User is not confirmed or activated. Please activate your account.' })
+    }
+
     // Reset the credit counts after every new month since last request
     resetCreditCount(user)
 
