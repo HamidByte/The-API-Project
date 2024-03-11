@@ -20,8 +20,9 @@ apiRouter.use('/api', apiRoutes)
 
 // Routes that require a session
 userAuthRouter.use(requireSession)
-dashboardRouter.use(requireSession)
 userAuthRouter.use('/', userAuthRoutes)
+
+dashboardRouter.use(requireSession)
 dashboardRouter.use('/', dashboardRoutes)
 
 module.exports = {

@@ -8,6 +8,7 @@ router.get('/activate', userAuthController.activateUser)
 router.post('/resend-activation', userAuthController.resendActivation)
 router.get('/get-user', userAuthController.getUser)
 router.get('/is-user-active', userAuthController.isUserActive)
+router.get('/logout', userAuthController.logoutUser)
 router.delete('/delete', userAuthController.deleteUser)
 
 module.exports = router

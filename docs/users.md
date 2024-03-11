@@ -7,13 +7,13 @@ You can send a request with a cookie using either `-b` or `-H` in curl. Both opt
 `-b`: This option is specifically designed for sending cookies. It allows you to specify the cookie data directly. For example:
 
 ```bash
-curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-user
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/get-user
 ```
 
 `-H`: This option is used to include additional HTTP headers in the request. While you can use it to send cookies by specifying the Cookie header, it's a more general-purpose option. For example:
 
 ```bash
-curl -X GET -H "Cookie: connect.sid=your-session-cookie-value" http://localhost:3000/get-user
+curl -X GET -H "Cookie: connect.sid=your-session-cookie-value" http://127.0.0.1:3000/get-user
 ```
 
 In the context of sending cookies, both options can achieve the same result. You can choose the one that you find more convenient or readable. The examples above demonstrate the use of both options for sending cookies.
@@ -30,7 +30,7 @@ In the context of sending cookies, both options can achieve the same result. You
 **Request**
 
 ```bash
-curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/activate?code=F68536
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/activate?code=F68536
 ```
 
 **Response:**
@@ -53,7 +53,7 @@ curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/act
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/resend-activation
+curl -X POST -b "connect.sid=your-session-cookie-value" -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://127.0.0.1:3000/resend-activation
 ```
 
 **Response:**
@@ -74,7 +74,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -H "Content-Type: applic
 **Request**
 
 ```bash
-curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-user
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/get-user
 ```
 
 **Response:**
@@ -107,7 +107,7 @@ curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get
 **Request**
 
 ```bash
-curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/is-user-active
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/is-user-active
 ```
 
 **Response:**
@@ -128,6 +128,27 @@ or
 }
 ```
 
+### Logout User
+
+- **Endpoint:** `/logout`
+- **Method:** `POST`
+- **Description:** Logs out the user by destroying the user's session.
+- **Authorization:** Requires a valid session.
+
+**Request**
+
+```bash
+curl -X POST -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/logout
+```
+
+**Response:**
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
 ### Delete User
 
 - **Endpoint:** `/delete`
@@ -138,7 +159,7 @@ or
 **Request**
 
 ```bash
-curl -X DELETE -b "connect.sid=your-session-cookie-value" http://localhost:3000/delete
+curl -X DELETE -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/delete
 ```
 
 **Response:**
@@ -164,7 +185,7 @@ curl -X DELETE -b "connect.sid=your-session-cookie-value" http://localhost:3000/
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John", "lastName": "Doe", "username": "john_doe", "password": ""}' http://localhost:3000/update-profile
+curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John", "lastName": "Doe", "username": "john_doe", "password": ""}' http://127.0.0.1:3000/update-profile
 ```
 
 **Response:**
@@ -187,7 +208,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"firstName": "John"
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@example.com"}' http://localhost:3000/change-email
+curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@example.com"}' http://127.0.0.1:3000/change-email
 ```
 
 **Response:**
@@ -210,7 +231,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/confirm-email/3b8397dd-5b7c-4bd0-8e05-6f24bfdfb139
+curl -X POST -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/confirm-email/3b8397dd-5b7c-4bd0-8e05-6f24bfdfb139
 ```
 
 **Response:**
@@ -233,7 +254,7 @@ curl -X POST -b "connect.sid=your-session-cookie-value" http://localhost:3000/co
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" -d "tokenExpiration=24h" http://localhost:3000/generate
+curl -X POST -b "connect.sid=your-session-cookie-value" -d "tokenExpiration=24h" http://127.0.0.1:3000/generate
 ```
 
 **Response**
@@ -260,7 +281,7 @@ Note: When specifying the `tokenExpiration` in the request body, you have the op
 **Request**
 
 ```bash
-curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get-api
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/get-api
 ```
 
 **Response**
@@ -285,7 +306,7 @@ curl -X GET -b "connect.sid=your-session-cookie-value" http://localhost:3000/get
 **Request**
 
 ```bash
-curl -X DELETE -b "connect.sid=your-session-cookie-value" http://localhost:3000/revoke
+curl -X DELETE -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/revoke
 ```
 
 **Response**

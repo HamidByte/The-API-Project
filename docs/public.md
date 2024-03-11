@@ -12,7 +12,7 @@
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "strongPassword1"}' http://localhost:3000/register
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "strongPassword1"}' http://127.0.0.1:3000/register
 ```
 
 **Response**
@@ -36,7 +36,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "strongPassword1"}' http://localhost:3000/register
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com", "password": "strongPassword1"}' http://127.0.0.1:3000/register
 ```
 
 **Response**
@@ -70,7 +70,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://localhost:3000/forgot-password
+curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example.com"}' http://127.0.0.1:3000/forgot-password
 ```
 
 **Response:**
@@ -93,7 +93,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "john.doe@example
 **Request**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"password": "strongPassword1"}' http://localhost:3000/reset-password/3c857304-3ca3-48d1-b1e7-6d5a41230106
+curl -X POST -H "Content-Type: application/json" -d '{"password": "strongPassword1"}' http://127.0.0.1:3000/reset-password/3c857304-3ca3-48d1-b1e7-6d5a41230106
 ```
 
 **Response:**

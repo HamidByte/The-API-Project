@@ -132,6 +132,21 @@ exports.isUserActive = async (req, res) => {
   }
 }
 
+exports.logoutUser = (req, res) => {
+  // Destroy the session
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err)
+      return res.status(500).json({ error: 'Error destroying session' })
+    }
+  })
+
+  // Clear the session cookie on the client-side
+  res.clearCookie('connect.sid') // Use the correct session cookie name
+
+  res.status(200).json({ message: 'Logout successful' })
+}
+
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.session?.user?.userId

@@ -7,13 +7,13 @@ Note: The authorization header requires a valid authentication token. Use the ge
 - **Endpoint:** `/api/v1/giphy/random`
 - **Method:** `GET`
 - **Description:** Returns a random giphy from the database.
-- **Example:** `http://localhost:3000/api/v1/giphy/random`
+- **Example:** `http://127.0.0.1:3000/api/v1/giphy/random`
 - **Authorization:** Requires a valid authentication token.
 
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/giphy/random
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://127.0.0.1:3000/api/v1/giphy/random
 ```
 
 **Response**
@@ -41,13 +41,13 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Endpoint:** `/api/v1/giphy/:id`
 - **Method:** `GET`
 - **Description:** Returns a giphy with the specified ID.
-- **Example:** `http://localhost:3000/api/v1/giphy/1`
+- **Example:** `http://127.0.0.1:3000/api/v1/giphy/1`
 - **Authorization:** Requires a valid authentication token.
 
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/giphy/1
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://127.0.0.1:3000/api/v1/giphy/1
 ```
 
 **Response**
@@ -75,13 +75,13 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Endpoint:** `/api/v1/giphy/search?q=cat`
 - **Method:** `GET`
 - **Description:** Performs a case-insensitive search for a random giphy based on the provided query string in the giphyTitle field.
-- **Example:** `http://localhost:3000/api/v1/giphy/search?q=cat`
+- **Example:** `http://127.0.0.1:3000/api/v1/giphy/search?q=cat`
 - **Authorization:** Requires a valid authentication token.
 
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/giphy/search?q=cat
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://127.0.0.1:3000/api/v1/giphy/search?q=cat
 ```
 
 **Response**
@@ -109,13 +109,13 @@ curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3
 - **Endpoint:** `/api/v1/giphy/gifid/:gifId`
 - **Method:** `GET`
 - **Description:** Returns a giphy with the specified GifId.
-- **Example:** `http://localhost:3000/api/v1/giphy/gifid/8H82lz6VblSd9Bf`
+- **Example:** `http://127.0.0.1:3000/api/v1/giphy/gifid/8H82lz6VblSd9Bf`
 - **Authorization:** Requires a valid authentication token.
 
 **Request**
 
 ```bash
-curl -X GET -H "Authorization: Bearer <your-generated-token>" http://localhost:3000/api/v1/giphy/gifid/8H82lz6VblSd9Bf
+curl -X GET -H "Authorization: Bearer <your-generated-token>" http://127.0.0.1:3000/api/v1/giphy/gifid/8H82lz6VblSd9Bf
 ```
 
 **Response**

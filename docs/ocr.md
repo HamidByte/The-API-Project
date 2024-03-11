@@ -7,7 +7,7 @@ Note: The authorization header requires a valid authentication token. Use the ge
 - **Endpoint:** `/api/v1/ocr/image-to-text`
 - **Method:** `POST`
 - **Description:** Retrieves extracted text from an image.
-- **Example:** `http://localhost:3000/api/v1/ocr/image-to-text`
+- **Example:** `http://127.0.0.1:3000/api/v1/ocr/image-to-text`
 - **Authorization:** Requires a valid authentication token.
 - **Parameters:**
   - `image`: Image file to be processed (Supported formats: jpg, jpeg, png, bmp, pbm, webp)
@@ -16,7 +16,7 @@ Note: The authorization header requires a valid authentication token. Use the ge
 **Request**
 
 ```bash
-curl -X POST -H "Authorization: Bearer <your-generated-token>" -F "image=@/path/to/your/image.jpg" -F "language=eng" http://localhost:3000/api/v1/ocr/image-to-text
+curl -X POST -H "Authorization: Bearer <your-generated-token>" -F "image=@/path/to/your/image.jpg" -F "language=eng" http://127.0.0.1:3000/api/v1/ocr/image-to-text
 ```
 
 **Response**

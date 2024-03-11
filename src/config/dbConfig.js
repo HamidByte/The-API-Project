@@ -12,7 +12,7 @@ module.exports = {
     host: url?.hostname,
     port: url?.port || 5432,
     dialect: 'postgres',
-    ssl: false // Set SSL to false for development
+    ssl: false
   },
   production: {
     username: url?.username,
@@ -21,6 +21,6 @@ module.exports = {
     host: url?.hostname,
     port: url?.port || 5432,
     dialect: 'postgres',
-    ssl: true
+    ssl: true // Set SSL to true for production
   }
 }
