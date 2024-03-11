@@ -71,12 +71,12 @@ If you're a developer making modifications to the project, refer to the `Databas
    API_SECRET_KEY=your-secret-key
    EMAIL_ADDRESS=your-email-address
    EMAIL_PASSWORD=your-email-password
-   BASE_URL_CLIENT=http://localhost:5173
+   BASE_URL_CLIENT=http://127.0.0.1:5173
 
    # Server environmental variables (optional)
-   HOST=localhost
+   HOST=127.0.0.1
    PORT=3000
-   BASE_URL_SERVER=http://localhost:3000
+   BASE_URL_SERVER=http://127.0.0.1:3000
    ```
 
    **.env.production:**
@@ -90,9 +90,9 @@ If you're a developer making modifications to the project, refer to the `Databas
    BASE_URL_CLIENT=your-client-url
 
    # Server environmental variables (optional)
-   HOST=localhost
-   PORT=3000
-   BASE_URL_SERVER=http://localhost:3000
+   HOST=your-host-name
+   PORT=your-port-number
+   BASE_URL_SERVER=your-base-url-server
    ```
 
    - A database URL is required if you intend to use a cloud database, and it's pre-configured for production.

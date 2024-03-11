@@ -28,6 +28,8 @@ const connectSequelizeSessionConfig = {
   secret: process.env.SESSION_SECRET_KEY,
   resave: false, // Don't save session if unmodified
   saveUninitialized: true, // Don't create session until data is stored (false). Enable sessions for all visitors when set to true.
+  proxy: true,
+  rolling: true,
   cookie: {
     secure: isProduction, // Set to true if using HTTPS in production
     maxAge: 24 * 60 * 60 * 1000, // Set expiration time in milliseconds (1 day in this case)

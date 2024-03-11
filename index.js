@@ -1,8 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-// const https = require('https')
 const corsOptions = require('./src/config/corsOptions')
+// const https = require('https')
+// const httpsOptions = require('./src/config/httpsOptions')
 const session = require('express-session')
 const connectSequelizeSessionConfig = require('./src/config/connectSequelizeSession')
 const { updateLoggerOptions } = require('./src/utils/updateLogger')
@@ -10,7 +11,6 @@ const expressWinston = require('express-winston')
 const { customLogger } = require('./src/utils/loggerTransport')
 const { sequelize } = require('./src/models')
 const { publicRouter, apiRouter, userAuthRouter, dashboardRouter } = require('./src/routes')
-// const httpsOptions = require('./src/config/httpsOptions')
 
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 const { hostName, portNumber, baseURLServer } = require('./src/config/serverConfig')
@@ -21,7 +21,7 @@ const HOST = process.env.HOST || hostName
 const PORT = process.env.PORT || portNumber
 const BASE_URL = process.env.BASE_URL_SERVER || baseURLServer
 
-app.set('trust proxy', true)
+app.set('trust proxy', 1)
 
 // Enable CORS for all origins
 app.use(cors(corsOptions))
@@ -80,14 +80,15 @@ sequelize.sync().then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`.blue)
     })
-  } else {
-    app.listen(PORT, HOST, () => {
-      console.log(`Server is running on ${BASE_URL}`.blue)
-    })
 
+    // https test on local for production environment
     // https.createServer(httpsOptions, app).listen(PORT, HOST, () => {
     //   console.log(`Server is running on ${BASE_URL}`.blue)
     // })
+  } else {
+    app.listen(PORT, () => {
+      console.log(`Server is running on ${BASE_URL}`.blue)
+    })
   }
 })
 
