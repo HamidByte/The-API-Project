@@ -134,13 +134,43 @@ If you're a developer making modifications to the project, refer to the `Databas
    npm run dev
    ```
 
+   The server is now running at http://127.0.0.1:3000
+
    For production:
+
+   # Option 1. Try it
 
    ```bash
    npm run prod
    ```
 
-   The server will be running at http://localhost:3000.
+   # Option 2. Run in the background using PM2
+
+   # Install PM2 if you don't have it:
+
+   ```bash
+   npm install pm2 -g
+   ```
+
+   # Start Server
+
+   ```bash
+   npm run pm2
+   ```
+
+   More useful PM2 Commands:
+
+   # If you want to see the current console output
+
+   ```bash
+   pm2 monit
+   ```
+
+   # If you want to add it to startup
+
+   ```bash
+   pm2 save && pm2 startup
+   ```
 
 ## Acknowledgments
 
