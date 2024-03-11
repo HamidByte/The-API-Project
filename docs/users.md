@@ -225,8 +225,6 @@ curl -X POST -b "connect.sid=your-session-cookie-value" -d '{"email": "john.doe@
 - **Method:** `POST`
 - **Description:** Confirm the email activation link to change the user's email address.
 - **Authorization:** Requires a valid session.
-- **Parameters:**
-  - `email`: Your new email address
 
 **Request**
 

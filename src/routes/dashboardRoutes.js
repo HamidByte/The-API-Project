@@ -49,7 +49,6 @@ router.post('/change-email', async (req, res) => {
 router.post('/confirm-email/:token', async (req, res) => {
   try {
     const { token } = req.params
-    const { email } = req.body
 
     const newEmail = req.session?.user?.newEmail
 
@@ -58,18 +57,27 @@ router.post('/confirm-email/:token', async (req, res) => {
       return
     }
 
-    if (email !== newEmail) {
-      res.status(400).json({ error: 'Email mismatch. Please use the correct email for confirmation.' })
-      return
-    }
-
-    const result = await dashboardController.confirmChangeUserEmail(req.session.user.userId, email, token)
+    const result = await dashboardController.confirmChangeUserEmail(req.session.user.userId, newEmail, token)
 
     if (result.error) {
       res.status(result.status).json({ error: result.error })
     } else {
-      // If the email change is successful, remove newEmail from the session.user
-      delete req.session.user.newEmail
+      // Email change confirmed successfully
+      // Retrieve the current user session
+      const currentUser = req.session.user
+
+      if (currentUser && currentUser.newEmail) {
+        // Update the session with the new email
+        req.session.user = {
+          userId: currentUser.userId,
+          email: newEmail,
+          role: currentUser.role
+        }
+
+        // Remove the newEmail field from the session.user
+        // Don't need to do this since the above method has changed the session.user object already
+        delete req.session.user.newEmail
+      }
 
       res.json({ message: 'User email changed successfully.' })
     }

@@ -118,10 +118,6 @@ const confirmChangeUserEmail = async (userId, email, token) => {
       return { error: 'Token is required.', status: 400 }
     }
 
-    if (!email) {
-      return { error: 'Email is required.', status: 400 }
-    }
-
     const user = await models.User.findOne({
       where: {
         uuid: userId,
