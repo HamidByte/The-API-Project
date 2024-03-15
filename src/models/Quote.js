@@ -10,15 +10,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       quote: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       author: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       category: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       createdAt: {
@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: true // This option adds the createdAt and updatedAt fields
+      // indexes: [
+      //   { name: 'index_gin_quote', method: 'GIN', fields: ['quote'] },
+      //   { name: 'index_btree_author', fields: ['author'] },
+      //   { name: 'index_btree_category', fields: ['category'] }
+      // ]
     }
   )
 

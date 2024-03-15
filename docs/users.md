@@ -131,14 +131,14 @@ or
 ### Logout User
 
 - **Endpoint:** `/logout`
-- **Method:** `POST`
+- **Method:** `GET`
 - **Description:** Logs out the user by destroying the user's session.
 - **Authorization:** Requires a valid session.
 
 **Request**
 
 ```bash
-curl -X POST -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/logout
+curl -X GET -b "connect.sid=your-session-cookie-value" http://127.0.0.1:3000/logout
 ```
 
 **Response:**

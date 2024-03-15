@@ -18,6 +18,46 @@ npx sequelize db:create
 
 This command (`npx sequelize db:create`) is used to create the database as specified in your Sequelize configuration. Make sure your configuration file (`src/config/dbConfig.js`) is correctly set up before running this command.
 
+### Database Indexing Guide
+
+This guide provides instructions on creating indexes in a PostgreSQL database using SQL query. It covers both B-tree indexes and Generalized Inverted Index (GIN).
+
+**Installing Required Extension**
+
+Before creating indexes, ensure the `pg_trgm` extension is installed in your PostgreSQL database. You can install it using the following SQL command:
+
+```bash
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+```
+
+**Creating Indexes**
+
+1. B-tree Index:
+
+For indexing numerical or string columns, use B-tree indexes. Here's how to create a B-tree index on a column:
+
+```bash
+CREATE INDEX index_btree_column ON your_table (your_column);
+```
+
+Replace `your_table` with the name of your table and `your_column` with the name of the column you want to index.
+
+To create an index on multiple columns, you can specify the columns within parentheses separated by commas. Here's how you can create an index on multiple columns:
+
+```bash
+CREATE INDEX index_name ON your_table (column1, column2, ...);
+```
+
+2. Generalized Inverted Index (GIN):
+
+For indexing large text fields, use the GIN index. Here's how to create a GIN index on a text field:
+
+```bash
+CREATE INDEX index_gin_text_field ON your_table USING gin (your_text_field gin_trgm_ops);
+```
+
+Replace `your_table` with the name of your table and `your_text_field` with the name of the text field you want to index.
+
 ### Migrations
 
 Migrations in Sequelize are scripts that define changes to your database schema, such as creating or modifying tables. The `npx sequelize db:migrate` command is used to apply any pending migrations in your Sequelize project.
