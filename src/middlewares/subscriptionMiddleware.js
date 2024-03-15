@@ -35,6 +35,8 @@ const verifySubscription = async (req, res, next) => {
       // Check if the endpoint is for OCR API
       if (req.originalUrl.includes(ROUTES.OCR)) {
         user.creditCount += subscriptionConfig.credits.ocr
+      } else if (req.originalUrl.includes(ROUTES.PAKISTAN)) {
+        user.creditCount += subscriptionConfig.credits.punjab_vehicles
       } else {
         // For other APIs, use standard credits
         user.creditCount += subscriptionConfig.credits.standard

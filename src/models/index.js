@@ -6,6 +6,7 @@ const ApiKeyModel = require('./ApiKey')
 const LogModel = require('./Log')
 const QuoteModel = require('./Quote')
 const GiphyModel = require('./Giphy')
+const PunjabVehicleModel = require('./PunjabVehicle')
 
 const models = {
   User: UserModel(sequelize, Sequelize),
@@ -13,7 +14,8 @@ const models = {
   ApiKey: ApiKeyModel(sequelize, Sequelize),
   Log: LogModel(sequelize, Sequelize),
   Quote: QuoteModel(sequelize, Sequelize),
-  Giphy: GiphyModel(sequelize, Sequelize)
+  Giphy: GiphyModel(sequelize, Sequelize),
+  PunjabVehicle: PunjabVehicleModel(sequelize, Sequelize)
 }
 
 // Establish associations

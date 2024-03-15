@@ -8,8 +8,9 @@ module.exports = {
     premium: Infinity
   },
   credits: {
-    none: 0, // free api
+    none: 0, // free/open api
     standard: 1, // default credit per request
-    ocr: 10 // ocr credit per request
+    ocr: 10, // ocr credit per request
+    punjab_vehicles: 20
   }
 }
