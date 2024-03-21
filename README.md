@@ -69,8 +69,13 @@ If you're a developer making modifications to the project, refer to the `Databas
    ```env
    SESSION_SECRET_KEY=your-secret-key
    API_SECRET_KEY=your-secret-key
+
+   # Email
    EMAIL_ADDRESS=your-email-address
    EMAIL_PASSWORD=your-email-password
+   DATABASE_URL=postgres://USERNAME:PASSWORD@localhost:5432/DATABASE_NAME
+
+   # Client url
    BASE_URL_CLIENT=http://127.0.0.1:5173
 
    # Server environmental variables (optional)
@@ -85,8 +90,12 @@ If you're a developer making modifications to the project, refer to the `Databas
    SESSION_SECRET_KEY=your-secret-key
    API_SECRET_KEY=your-secret-key
    DATABASE_URL=database-url
+
+   # Email
    EMAIL_ADDRESS=your-email-address
    EMAIL_PASSWORD=your-email-password
+
+   # Client url
    BASE_URL_CLIENT=your-client-url
 
    # Server environmental variables (optional)
@@ -95,8 +104,9 @@ If you're a developer making modifications to the project, refer to the `Databas
    BASE_URL_SERVER=your-base-url-server
    ```
 
-   - A database URL is required if you intend to use a cloud database, and it's pre-configured for production.
-   - To customize, modify the `src/config/dbConfig.js` file as needed.
+   - A database URL is required. Update `USERNAME`, `PASSWORD`, and `DATABASE_NAME` in the `.env.development` file to configure the database for development.
+   - If you intend to use a cloud database, it's pre-configured for production in the `.env.production` file. Ensure the `DATABASE_URL` is properly set up for production environments.
+   - To customize the database configuration, modify the `src/config/dbConfig.js` file as needed, supporting both development and production environments. Ensure SSL is enabled for production by setting `ssl: true` in the production configuration.
    - Certain email services may block SMTP access. For Gmail, generate a Google app password, enabling the `less secure apps access` account setting in your Google account.
    - Note that this setting is turned off by default, and you need to enable it.
    - If you are using another email service provider that supports SMTP, update the settings in `src/config/emailConfig.js`.
